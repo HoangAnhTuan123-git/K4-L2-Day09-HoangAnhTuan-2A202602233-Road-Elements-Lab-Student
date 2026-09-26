@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Annotation Guideline — Road Vehicles & Human Elements (Team 09)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --bg-card: rgba(22, 30, 49, 0.7);
+      --bg-card-hover: rgba(30, 41, 69, 0.85);
+      --border-card: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(56, 189, 248, 0.3);
+      --primary: #0ea5e9;
+      --primary-glow: rgba(14, 165, 233, 0.35);
+      --accent-purple: #a855f7;
+      --accent-green: #10b981;
+      --accent-red: #ef4444;
+      --accent-amber: #f59e0b;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --radius-lg: 20px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --transition-smooth: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Outfit', sans-serif;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    /* Ambient background gradient meshes */
+    .ambient-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.18;
+      animation: pulseGlow 14s infinite alternate;
+    }
+    .blob-1 { top: -10%; left: 10%; width: 50vw; height: 50vw; background: radial-gradient(circle, #0ea5e9, transparent 70%); }
+    .blob-2 { bottom: -20%; right: 5%; width: 45vw; height: 45vw; background: radial-gradient(circle, #8b5cf6, transparent 70%); }
+    .blob-3 { top: 40%; left: 40%; width: 35vw; height: 35vw; background: radial-gradient(circle, #06b6d4, transparent 70%); opacity: 0.12; }
+
+    @keyframes pulseGlow {
+      0% { transform: scale(1) translate(0, 0); }
+      100% { transform: scale(1.15) translate(30px, -20px); }
+    }
+
+    /* Top Progress Bar */
+    .top-progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      z-index: 100;
+    }
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #0ea5e9, #a855f7, #ec4899);
+      transition: width 0.4s ease;
+      box-shadow: 0 0 12px var(--primary-glow);
+    }
+
+    /* Header Nav */
+    header {
+      position: relative;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 36px;
+      border-bottom: 1px solid var(--border-card);
+      backdrop-filter: blur(20px);
+      background: rgba(9, 13, 22, 0.6);
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .logo-badge {
+      background: linear-gradient(135deg, #0ea5e9, #6366f1);
+      color: white;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 1px;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      box-shadow: 0 4px 14px var(--primary-glow);
+    }
+    .topic-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .topic-title span {
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .pill-counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-card);
+      color: var(--primary);
+    }
+    .btn-icon {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-card);
+      color: var(--text-muted);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: var(--transition-smooth);
+    }
+    .btn-icon:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    /* Slide Deck Container */
+    .deck-container {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      height: calc(100vh - 140px);
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1200px;
+      overflow: hidden;
+      padding: 20px 40px;
+    }
+
+    .slide {
+      position: absolute;
+      width: 90vw;
+      max-width: 1320px;
+      height: 80vh;
+      max-height: 740px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      backdrop-filter: blur(24px);
+      border-radius: var(--radius-lg);
+      padding: 44px 56px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      opacity: 0;
+      transform: translateY(40px) scale(0.96) rotateX(-2deg);
+      pointer-events: none;
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      overflow-y: auto;
+    }
+
+    .slide::-webkit-scrollbar {
+      width: 6px;
+    }
+    .slide::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+    }
+
+    .slide.active {
+      opacity: 1;
+      transform: translateY(0) scale(1) rotateX(0deg);
+      pointer-events: auto;
+      z-index: 20;
+    }
+
+    .slide.prev {
+      opacity: 0;
+      transform: translateX(-120px) scale(0.92);
+      pointer-events: none;
+    }
+
+    .slide.next {
+      opacity: 0;
+      transform: translateX(120px) scale(0.92);
+      pointer-events: none;
+    }
+
+    /* Slide Typography */
+    .slide-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--primary);
+      background: rgba(14, 165, 233, 0.12);
+      border: 1px solid rgba(14, 165, 233, 0.25);
+      padding: 5px 14px;
+      border-radius: 30px;
+      margin-bottom: 12px;
+      width: fit-content;
+    }
+
+    .slide-title {
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      line-height: 1.25;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #ffffff 40%, #94a3b8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    /* Grids & Cards */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      flex: 1;
+      align-items: stretch;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      flex: 1;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      flex: 1;
+    }
+
+    .content-box {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .content-box:hover {
+      border-color: var(--border-accent);
+      background: rgba(22, 32, 58, 0.7);
+      transform: translateY(-2px);
+    }
+
+    .box-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 600;
+      font-size: 17px;
+      color: var(--text-main);
+    }
+
+    .box-header svg {
+      color: var(--primary);
+    }
+
+    .box-desc {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    /* Highlight Pill Callout */
+    .callout-pill {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(168, 85, 247, 0.15));
+      border: 1px solid rgba(14, 165, 233, 0.35);
+      border-radius: var(--radius-md);
+      padding: 18px 24px;
+      margin-top: 14px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .callout-pill .icon {
+      font-size: 26px;
+      flex-shrink: 0;
+    }
+    .callout-pill .text {
+      font-size: 14.5px;
+      line-height: 1.55;
+      color: #e2e8f0;
+    }
+
+    /* Compare Box (Right vs Wrong) */
+    .compare-container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 10px;
+      flex: 1;
+    }
+
+    .compare-card {
+      border-radius: var(--radius-md);
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .compare-card.correct {
+      background: rgba(16, 185, 129, 0.07);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+    }
+
+    .compare-card.incorrect {
+      background: rgba(239, 68, 68, 0.07);
+      border: 1px solid rgba(239, 68, 68, 0.35);
+    }
+
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      width: fit-content;
+    }
+
+    .badge-status.correct {
+      background: rgba(16, 185, 129, 0.2);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.4);
+    }
+
+    .badge-status.incorrect {
+      background: rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.4);
+    }
+
+    /* Visual Box Simulation Canvas */
+    .vis-box-demo {
+      height: 180px;
+      border-radius: var(--radius-sm);
+      background: #0b1120;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 12px 0;
+    }
+
+    .sim-vehicle {
+      position: absolute;
+      width: 130px;
+      height: 70px;
+      border-radius: 8px;
+      background: #1e293b;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #94a3b8;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+    }
+
+    .sim-rider {
+      position: absolute;
+      top: 15px;
+      width: 44px;
+      height: 60px;
+      background: #334155;
+      border-radius: 12px 12px 6px 6px;
+      border: 1px dashed #64748b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #cbd5e1;
+      font-size: 11px;
+    }
+
+    /* Correct wireframe box */
+    .bbox-driver-correct {
+      position: absolute;
+      top: 10px;
+      width: 54px;
+      height: 70px;
+      border: 2px solid #10b981;
+      background: rgba(16, 185, 129, 0.15);
+      border-radius: 4px;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+    }
+    .bbox-tag {
+      position: absolute;
+      top: -16px;
+      left: 0;
+      background: #10b981;
+      color: #022c22;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 2px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Incorrect wireframe box */
+    .bbox-driver-wrong {
+      position: absolute;
+      top: 8px;
+      width: 150px;
+      height: 140px;
+      border: 2px dashed #ef4444;
+      background: rgba(239, 68, 68, 0.15);
+      border-radius: 4px;
+      box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
+    }
+    .bbox-tag-wrong {
+      position: absolute;
+      top: -16px;
+      left: 0;
+      background: #ef4444;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 1px 5px;
+      border-radius: 2px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* Bottom Navigation Bar */
+    footer {
+      position: relative;
+      z-index: 50;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 40px;
+      border-top: 1px solid var(--border-card);
+      backdrop-filter: blur(20px);
+      background: rgba(9, 13, 22, 0.6);
+    }
+
+    .key-hints {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: var(--text-dim);
+      font-size: 13px;
+    }
+    .kbd {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .nav-buttons {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-card);
+      color: var(--text-main);
+      padding: 10px 22px;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: var(--transition-smooth);
+    }
+    .btn-nav:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+      box-shadow: 0 4px 18px var(--primary-glow);
+      transform: translateY(-2px);
+    }
+    .btn-nav:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    /* Overview Modal Grid */
+    .overview-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(4, 7, 14, 0.92);
+      backdrop-filter: blur(20px);
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      padding: 40px 60px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .overview-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .overview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      overflow-y: auto;
+      padding-bottom: 40px;
+    }
+    .thumb-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+    }
+    /* Speaker Notes Teleprompter */
+    .speaker-notes-drawer {
+      position: fixed;
+      bottom: 85px;
+      right: 40px;
+      width: 440px;
+      max-height: 290px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--primary);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.8), 0 0 24px var(--primary-glow);
+      border-radius: var(--radius-md);
+      padding: 18px 22px;
+      z-index: 180;
+      backdrop-filter: blur(20px);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      opacity: 0;
+      transform: translateY(20px);
+      pointer-events: none;
+      transition: var(--transition-smooth);
+    }
+    .speaker-notes-drawer.open {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .notes-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: 1px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .notes-body {
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: #f1f5f9;
+      overflow-y: auto;
+    }
+
+    .thumb-card:hover, .thumb-card.active {
+      border-color: var(--primary);
+      background: rgba(14, 165, 233, 0.15);
+      transform: translateY(-4px);
+    }
+    .thumb-num {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 6px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .thumb-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.35;
+    }
+
+    /* Tag styles */
+    .tag {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .tag-blue { background: rgba(14, 165, 233, 0.2); color: #38bdf8; }
+    .tag-purple { background: rgba(168, 85, 247, 0.2); color: #c084fc; }
+    .tag-green { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .tag-amber { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .tag-red { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+
+    /* Table styling inside slides */
+    .custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      margin-top: 10px;
+    }
+    .custom-table th {
+      text-align: left;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border-card);
+      font-weight: 600;
+    }
+    .custom-table td {
+      padding: 10px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: #cbd5e1;
+    }
+    .custom-table tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Light Blobs -->
+  <div class="ambient-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
+
+  <!-- Progress Bar -->
+  <div class="top-progress">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="brand-group">
+      <div class="logo-badge">LAB 09</div>
+      <div class="topic-title">
+        Road Elements Guideline <span>· Autonomous Driving Dataset</span>
+      </div>
+    </div>
+    <div class="header-controls">
+      <div class="pill-counter" id="slideCounter">01 / 10</div>
+      <button class="btn-icon" id="btnNotes" title="Kịch Bản Thuyết Trình (N)">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z"></path></svg>
+      </button>
+      <button class="btn-icon" id="btnOverview" title="Overview Grid (O)">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+      </button>
+      <button class="btn-icon" id="btnFullscreen" title="Toggle Fullscreen (F)">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 8V4m0 0h4M4 4l5 5m11-5h-4m4 0v4m0-4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Slide Deck -->
+  <main class="deck-container" id="deckContainer">
+
+    <!-- SLIDE 1: HERO / TITLE -->
+    <div class="slide active" data-slide="1">
+      <div>
+        <div class="slide-badge">VINUNI ADAS · GUIDELINE CHALLENGE</div>
+        <h1 class="slide-title" style="font-size: 44px; margin-top: 10px; margin-bottom: 16px;">
+          Quy Chuẩn Gán Nhãn Phương Tiện & Người Tham Gia Giao Thông
+        </h1>
+        <p class="slide-subtitle" style="font-size: 19px; max-width: 880px;">
+          Hướng dẫn chi tiết định danh 2D Bounding Box phục vụ phát hiện vật thể tầm gần & xa cho hệ thống lái xe tự hành ADAS và giám sát thông minh.
+        </p>
+      </div>
+
+      <div class="grid-3" style="margin: 20px 0;">
+        <div class="content-box">
+          <div class="box-header">
+            <span class="tag tag-blue">VERSION</span> v2 Updated
+          </div>
+          <p class="box-desc">Đã hiệu chỉnh từ bài test hiệu chuẩn nội bộ (Calibration) & 4 trường hợp biên (Edge Cases).</p>
+        </div>
+        <div class="content-box">
+          <div class="box-header">
+            <span class="tag tag-purple">SCHEMA</span> 7 Classes · 2 Attributes
+          </div>
+          <p class="box-desc">Phân tách rõ ràng phương tiện cơ giới tĩnh/động, người điều khiển và người đi bộ.</p>
+        </div>
+        <div class="content-box">
+          <div class="box-header">
+            <span class="tag tag-green">QUALITY</span> CVAT Ready · Gates G1–G4
+          </div>
+          <p class="box-desc">Đã đóng băng (Freeze) tập Gold Decisions cho vòng kiểm thử Blind Handoff.</p>
+        </div>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-card); padding-top: 16px;">
+        <div style="color: var(--text-dim); font-size: 14px;">
+          Nhóm thực hiện: <strong style="color: var(--text-main);">Team 09</strong> · Ngày báo cáo: Tháng 09/2026
+        </div>
+        <div style="color: var(--primary); font-size: 14px; font-weight: 600;">
+          Dùng phím mũi tên [→] hoặc [Space] để bắt đầu
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: TAXONOMY OVERVIEW -->
+    <div class="slide" data-slide="2">
+      <div>
+        <div class="slide-badge">01. TAXONOMY</div>
+        <h2 class="slide-title">Bảng Phân Loại 7 Classes & 2 Attributes</h2>
+        <p class="slide-subtitle">Quy định danh mục đối tượng trên đường phố theo chuẩn CVAT.</p>
+      </div>
+
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>Class Name</th>
+            <th>Mục đích nhận diện</th>
+            <th>Quy cách Bounding Box</th>
+            <th>Loại</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong style="color: #38bdf8;">Car</strong></td>
+            <td>Xe con 4–9 chỗ, sedan, hatchback, SUV, taxi</td>
+            <td>Kéo khít toàn bộ xe, gồm <strong>bánh xe tiếp đất và 2 gương chiếu hậu</strong></td>
+            <td><span class="tag tag-blue">Class</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #34d399;">Driver</strong></td>
+            <td>Người đang ngồi trên xe và trực tiếp điều khiển xe máy/xe đạp</td>
+            <td><strong>CHỈ ôm người lái xe máy/xe đạp</strong>, không cần đánh dấu phương tiện</td>
+            <td><span class="tag tag-green">Class (Mới)</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #c084fc;">Pedestrian</strong></td>
+            <td>Người đi bộ, chạy bộ, đứng ven đường, dắt bộ xe</td>
+            <td>Ôm sát cơ thể từ đỉnh đầu đến gót chân (gồm ba lô/túi)</td>
+            <td><span class="tag tag-purple">Class</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #fbbf24;">Motorcycle</strong></td>
+            <td>Xe máy đang đỗ, không có người ngồi trên xe điều khiển</td>
+            <td>Ôm trọn vẹn thân xe máy đỗ trên vỉa hè hoặc lòng đường</td>
+            <td><span class="tag tag-amber">Class</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #94a3b8;">Bus / Truck / Pickup</strong></td>
+            <td>Xe buýt khách, xe tải chở hàng, xe bán tải có thùng hàng hở</td>
+            <td>Ôm trọn thùng xe, cabin, cản trước và bánh xe nhìn thấy</td>
+            <td><span class="tag tag-blue">Class</span></td>
+          </tr>
+          <tr>
+            <td><strong style="color: #ec4899;">occluded / truncated</strong></td>
+            <td>Che khuất một phần (&gt;10%) / Bị cắt cụt ở mép ảnh</td>
+            <td>Tích chọn checkbox thuộc tính (`true`/`false`)</td>
+            <td><span class="tag tag-red">Attribute</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- SLIDE 3: THE NEW DRIVER RULE -->
+    <div class="slide" data-slide="3">
+      <div>
+        <div class="slide-badge" style="background: rgba(16, 185, 129, 0.15); color: #34d399; border-color: rgba(16, 185, 129, 0.4);">
+          ⭐ ĐIỂM NHẤN QUAN TRỌNG NHẤT
+        </div>
+        <h2 class="slide-title">Quy Tắc Mới Cho `Driver`: Chỉ Đánh Dấu Người Lái</h2>
+        <p class="slide-subtitle">Không gán nhãn phương tiện khi xe đang được người điều khiển.</p>
+      </div>
+
+      <div class="compare-container">
+        <!-- ĐÚNG -->
+        <div class="compare-card correct">
+          <div>
+            <div class="badge-status correct">✓ CÁCH LÀM ĐÚNG (STANDARD)</div>
+            <h3 style="color: #34d399; margin-bottom: 8px;">Chỉ vẽ Bounding Box quanh Người Lái</h3>
+            <p class="box-desc">
+              Box kéo từ đầu người tới chân. Phương tiện đang lái không cần đánh dấu.
+            </p>
+          </div>
+
+          <div class="vis-box-demo">
+            <!-- Simulated background bike -->
+            <div class="sim-vehicle" style="bottom: 25px;">
+              <span>Xe máy (Bỏ qua)</span>
+            </div>
+            <!-- Simulated rider -->
+            <div class="sim-rider" style="top: 20px;">Rider</div>
+            <!-- Correct Box -->
+            <div class="bbox-driver-correct" style="top: 15px;">
+              <div class="bbox-tag">Driver (Chỉ người)</div>
+            </div>
+          </div>
+
+          <div style="font-size: 13px; color: #a7f3d0; line-height: 1.5;">
+            💡 <em>Lý do:</em> Giúp detector tách biệt rõ thực thể con người để tính toán nguy cơ va chạm tổn thương cao.
+          </div>
+        </div>
+
+        <!-- SAI -->
+        <div class="compare-card incorrect">
+          <div>
+            <div class="badge-status incorrect">✗ LỖI PHỔ BIẾN CẦN TRÁNH</div>
+            <h3 style="color: #f87171; margin-bottom: 8px;">Vẽ 1 Box Trùm Cả Người Lẫn Xe Máy</h3>
+            <p class="box-desc">
+              Vẽ box trùm cả người lẫn xe máy, hoặc vẽ nhãn <code>Motorcycle</code> đè lên chiếc xe đang chạy. Đây là quy ước cũ và <strong>đã bị loại bỏ trong v2</strong>.
+            </p>
+          </div>
+
+          <div class="vis-box-demo">
+            <div class="sim-vehicle" style="bottom: 25px;">
+              <span>Xe máy</span>
+            </div>
+            <div class="sim-rider" style="top: 20px;">Rider</div>
+            <!-- Wrong big Box -->
+            <div class="bbox-driver-wrong" style="top: 12px; height: 125px; width: 150px;">
+              <div class="bbox-tag-wrong">SAI: Trùm cả xe + người</div>
+            </div>
+          </div>
+
+          <div style="font-size: 13px; color: #fecaca; line-height: 1.5;">
+            ⚠️ <em>Hậu quả:</em> Làm box quá rộng, sai lệch tỷ lệ khung hình chuẩn của con người, gây phạt điểm trong QA.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: DRIVER VS PEDESTRIAN VS MOTORCYCLE -->
+    <div class="slide" data-slide="4">
+      <div>
+        <div class="slide-badge">02. AMBIGUITY DECISION MATRIX</div>
+        <h2 class="slide-title">Phân Định: Driver vs Pedestrian vs Motorcycle</h2>
+        <p class="slide-subtitle">Hướng dẫn ra quyết định nhanh khi gặp người và xe 2 bánh trong cùng khung cảnh.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="content-box">
+          <div class="box-header" style="color: #34d399;">
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path></svg>
+            Ngồi Trên Xe Điều Khiển
+          </div>
+          <div style="margin: 8px 0;">
+            <span class="tag tag-green">Gán nhãn: Driver</span>
+          </div>
+          <p class="box-desc">
+            - Áp dụng khi người đang <strong>ngồi trên yên xe và trực tiếp lái xe máy hoặc xe đạp</strong>.<br>
+            - Bounding box <strong>chỉ ôm khít người lái</strong>.<br>
+            - Chiếc xe họ đang lái: <strong>Không cần đánh dấu</strong>.
+          </p>
+        </div>
+
+        <div class="content-box">
+          <div class="box-header" style="color: #c084fc;">
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
+            Không Ngồi Trên Xe
+          </div>
+          <div style="margin: 8px 0;">
+            <span class="tag tag-purple">Gán nhãn: Pedestrian</span>
+          </div>
+          <p class="box-desc">
+            - Bất kỳ ai <strong>không ngồi trên xe</strong>: đi bộ, chạy, đứng bên lề, hoặc <strong>đang dắt bộ xe máy/xe đạp</strong>.<br>
+            - Nếu đang dắt xe: người là <code>Pedestrian</code>, chiếc xe được dắt là <code>Motorcycle</code> (tách riêng 2 box).
+          </p>
+        </div>
+
+        <div class="content-box">
+          <div class="box-header" style="color: #fbbf24;">
+            <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            Xe Đỗ Không Có Người Lái
+          </div>
+          <div style="margin: 8px 0;">
+            <span class="tag tag-amber">Gán nhãn: Motorcycle</span>
+          </div>
+          <p class="box-desc">
+            - Xe máy đang dựng chân chống đỗ trên vỉa hè hoặc mép đường.<br>
+            - Xe không có người ngồi điều khiển.<br>
+            - Box ôm toàn bộ thân xe, tay lái và bánh xe tiếp xúc đất.
+          </p>
+        </div>
+      </div>
+
+      <div class="callout-pill" style="margin-top: 18px;">
+        <div class="icon">👥</div>
+        <div class="text">
+          <strong>Xe máy chở 2 hoặc chở 3 người:</strong> Người cầm lái chính gán nhãn <code>Driver</code> (chỉ ôm người lái). Người ngồi phụ phía sau nếu nhìn rõ gán nhãn riêng là <code>Pedestrian</code>.
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: CAR GEOMETRY RULE -->
+    <div class="slide" data-slide="5">
+      <div>
+        <div class="slide-badge">03. GEOMETRY TIGHTNESS</div>
+        <h2 class="slide-title">Quy Chuẩn Hình Học Cho Xe Ô Tô (`Car`)</h2>
+        <p class="slide-subtitle">Quy tắc bắt buộc về độ khít mép hộp Bounding Box cho xe con.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="content-box">
+          <div class="box-header" style="color: #38bdf8;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"></path></svg>
+            Yêu Cầu Bắt Buộc Phải Ôm Trọn
+          </div>
+          <ul style="padding-left: 20px; color: var(--text-muted); font-size: 14px; line-height: 1.8;">
+            <li><strong>Bánh xe tiếp xúc mặt đường:</strong> Mép dưới của box phải kéo chạm điểm đáy tiếp giáp giữa lốp xe và mặt đường. Tuyệt đối không cắt ngang lốp xe.</li>
+            <li><strong>Hai gương chiếu hậu:</strong> Mép trái và phải của box bắt buộc phải bao trùm cả 2 tai gương chìa ra hai bên thân xe.</li>
+            <li><strong>Cản trước / cản sau / giá nóc:</strong> Ôm khít toàn bộ phụ kiện gắn liền với khung xe.</li>
+            <li><strong>Dung sai hình học:</strong> Không lệch quá <strong>±2 pixel</strong> so với đường biên thực tế.</li>
+          </ul>
+        </div>
+
+        <div class="content-box">
+          <div class="box-header" style="color: #f87171;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
+            Những Thứ Tuyệt Đối KHÔNG Vẽ Vào Box
+          </div>
+          <ul style="padding-left: 20px; color: var(--text-muted); font-size: 14px; line-height: 1.8;">
+            <li><strong style="color: #fca5a5;">Bóng đổ của xe trên mặt đường nhựa:</strong> Vệt bóng đen dưới gầm/bên cạnh xe không phải là cấu kiện cơ khí, không được kéo box trùm bóng đổ.</li>
+            <li><strong style="color: #fca5a5;">Bóng phản chiếu trên vũng nước mưa:</strong> Khi đường ướt, hình phản chiếu xe dưới mặt đường phải bị loại bỏ.</li>
+            <li><strong style="color: #fca5a5;">Vệt đèn pha rọi ra ngoài ban đêm:</strong> Chỉ lấy theo chóa đèn xe, không lấy theo luồng sáng chiếu ra xa.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout-pill" style="margin-top: 18px;">
+        <div class="icon">📏</div>
+        <div class="text">
+          <strong>Không vẽ Amodal:</strong> Chỉ vẽ trên phần diện tích thực sự nhìn thấy (visible pixels), không tự suy đoán phần gầm xe ngầm bên dưới hay phần bị tường che khuất.
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: ATTRIBUTES -->
+    <div class="slide" data-slide="6">
+      <div>
+        <div class="slide-badge">04. ATTRIBUTES</div>
+        <h2 class="slide-title">Bộ Thuộc Tính: `occluded` & `truncated`</h2>
+        <p class="slide-subtitle">Đánh dấu trạng thái quan sát phụ thuộc góc chụp camera.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="content-box" style="border-left: 4px solid #f59e0b;">
+          <div class="box-header">
+            <span class="tag tag-amber">ATTRIBUTE</span> occluded (Bị che khuất)
+          </div>
+          <p class="box-desc" style="font-size: 15px; color: #f8fafc;">
+            Tích chọn <code>true</code> khi đối tượng bị vật cản khác che mất <strong>&gt; 10% diện tích nhìn thấy</strong>.
+          </p>
+          <ul style="padding-left: 20px; color: var(--text-muted); font-size: 13.5px; line-height: 1.7;">
+            <li>Bị xe khác chen lấn che mất bánh trước hoặc thân xe.</li>
+            <li>Bị cây xanh, cột điện, biển báo giao thông hoặc lan can che khuất.</li>
+            <li><strong>Ngưỡng bỏ qua:</strong> Nếu bị che quá 80% và không còn nhận dạng được hình bóng đối tượng → Bỏ qua (Ignore).</li>
+          </ul>
+        </div>
+
+        <div class="content-box" style="border-left: 4px solid #ef4444;">
+          <div class="box-header">
+            <span class="tag tag-red">ATTRIBUTE</span> truncated (Bị cắt ở rìa ảnh)
+          </div>
+          <p class="box-desc" style="font-size: 15px; color: #f8fafc;">
+            Tích chọn <code>true</code> khi đối tượng <strong>chạm hoặc bị cắt bởi 4 đường biên của khung ảnh</strong>.
+          </p>
+          <ul style="padding-left: 20px; color: var(--text-muted); font-size: 13.5px; line-height: 1.7;">
+            <li>Mép box kéo chạm sát tọa độ rìa (x=0, y=0, x=width, y=height).</li>
+            <li>Thường gặp với xe ô tô chạy song song sát camera hoặc xe vượt qua góc nhìn.</li>
+            <li>Vẫn phải ôm khít phần thân xe còn lại đang hiển thị trong ảnh.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout-pill" style="margin-top: 20px;">
+        <div class="icon">⚠️</div>
+        <div class="text">
+          <strong>Default là `false`:</strong> Annotator luôn phải chủ động kiểm tra mép ảnh và tình trạng chen chúc trước khi bấm Save trên CVAT.
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: DENSE TRAFFIC -->
+    <div class="slide" data-slide="7">
+      <div>
+        <div class="slide-badge">05. VIETNAM TRAFFIC EDGE CASES</div>
+        <h2 class="slide-title">Xử Lý Chùm Xe Máy Đông Đúc & Ngã Tư</h2>
+        <p class="slide-subtitle">Quy cách giải quyết tình huống mật độ cực cao đặc thù giao thông nội đô.</p>
+      </div>
+
+      <div class="grid-3">
+        <div class="content-box">
+          <div class="box-header" style="color: #38bdf8;">
+            1. Từng Box Riêng Biệt
+          </div>
+          <p class="box-desc">
+            Dù xe máy đi san sát nhau đến mức dính liền hình ảnh: <strong>Bắt buộc vẽ từng box `Driver` riêng cho từng người lái</strong>. Không vẽ 1 box gộp chung cả đám đông.
+          </p>
+        </div>
+
+        <div class="content-box">
+          <div class="box-header" style="color: #a855f7;">
+            2. Chấp Nhận Box Chồng Lấn
+          </div>
+          <p class="box-desc">
+            Trong đám đông ngã tư, các bounding box người lái xe máy đè lên nhau (overlapping) là hoàn toàn hợp lệ và bình thường.
+          </p>
+        </div>
+
+        <div class="content-box" style="border-top: 2px solid #f59e0b;">
+          <div class="box-header" style="color: #f59e0b;">
+            3. Bật Thuộc Tính Occluded
+          </div>
+          <p class="box-desc">
+            Người lái xe đi phía sau bị người đi trước che khuất phần tay hoặc ngực: vẽ box visible của người đó và tích ngay <code>occluded: true</code>.
+          </p>
+        </div>
+      </div>
+
+      <div class="content-box" style="margin-top: 18px; background: rgba(30, 41, 69, 0.5);">
+        <div class="box-header">
+          🚌 Trường hợp Xe Buýt / Xe Tải lớn giữa đám đông xe máy (`images.jpg`)
+        </div>
+        <p class="box-desc">
+          Xe buýt to lớn đi giữa dòng xe máy: Vẫn vẽ box <code>Bus</code> ôm toàn bộ thân xe từ nóc xuống mép cản thấp nhất nhìn thấy. Vì phần gầm xe bị hàng chục xe máy che lấp, bắt buộc đánh dấu xe buýt là <code>occluded: true</code>.
+        </p>
+      </div>
+    </div>
+
+    <!-- SLIDE 8: SMALL TARGETS & CONDITIONS -->
+    <div class="slide" data-slide="8">
+      <div>
+        <div class="slide-badge">06. DETECTION LIMITS</div>
+        <h2 class="slide-title">Vật Thể Nhỏ Ở Xa & Điều Kiện Môi Trường</h2>
+        <p class="slide-subtitle">Ngưỡng kích thước tối thiểu và các tình huống gây nhiễu thị giác.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="content-box">
+          <div class="box-header" style="color: #38bdf8;">
+            Ngưỡng Kích Thước Nhỏ (Small Objects)
+          </div>
+          <ul style="padding-left: 20px; color: var(--text-muted); font-size: 14px; line-height: 1.8;">
+            <li><strong>Ngưỡng nhận dạng:</strong> Chiều rộng hoặc chiều cao <strong>≥ 8 pixel</strong>.</li>
+            <li>Nếu mắt thường nhận ra hình dáng người lái xe máy hoặc xe con ở xa ngã tư → <strong>BẮT BUỘC GÁN NHÃN</strong>.</li>
+            <li>Không được tự ý bỏ qua các xe ở xa chỉ vì kích thước nhỏ.</li>
+            <li><strong>Khi nào bỏ qua (Ignore):</strong> Khi kích thước &lt; 8px hoặc vật thể mờ nhòe hoàn toàn thành 1 chấm màu không thể khẳng định loại xe.</li>
+          </ul>
+        </div>
+
+        <div class="content-box">
+          <div class="box-header" style="color: #a855f7;">
+            Điều Kiện Thời Tiết & Ánh Sáng Xấu
+          </div>
+          <ul style="padding-left: 20px; color: var(--text-muted); font-size: 14px; line-height: 1.8;">
+            <li><strong>Đường mưa / ẩm ướt:</strong> Mặt đường phản chiếu đèn xe thành vệt sáng dài. Chỉ kéo box đến mép bánh xe, cắt bỏ toàn bộ vệt bóng nước.</li>
+            <li><strong>Đêm tối / ngược sáng đèn pha:</strong> Nhìn kỹ viền thân xe trong bóng tối để kéo box ôm hết lốp xe. Luồng sáng chói rọi ra ngoài phải bỏ qua.</li>
+            <li><strong>Đường phủ tuyết:</strong> Không để tuyết phủ mép lốp đánh lừa, kéo box chạm cốt mặt đường cơ sở.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="callout-pill" style="margin-top: 18px;">
+        <div class="icon">🔬</div>
+        <div class="text">
+          <strong>Mẹo Zoom trên CVAT:</strong> Luôn zoom 400% - 600% tại các khu vực đường chân trời và ngã tư để không bỏ sót các xe nhỏ 8-15px.
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 9: COMMON MISTAKES -->
+    <div class="slide" data-slide="9">
+      <div>
+        <div class="slide-badge" style="background: rgba(239, 68, 68, 0.15); color: #f87171; border-color: rgba(239, 68, 68, 0.35);">
+          CHECKLIST KIỂM THỬ TRƯỚC KHI EXPORT
+        </div>
+        <h2 class="slide-title">5 Lỗi Gán Nhãn Phổ Biến Nhất Cần Tránh</h2>
+        <p class="slide-subtitle">Danh sách lỗi thường xuyên bị trừ điểm trong các đợt QA & Blind Test.</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="content-box" style="border-left: 4px solid #ef4444;">
+          <div class="box-header" style="color: #f87171;">1. Cắt Cụt Gương Chiếu Hậu & Bánh Xe `Car`</div>
+          <p class="box-desc">Chỉ vẽ ôm vỏ xe mà quên 2 bên gương hoặc mép dưới lốp xe chạm đất. (Quy tắc: phải ôm trọn cả bánh và gương).</p>
+        </div>
+
+        <div class="content-box" style="border-left: 4px solid #ef4444;">
+          <div class="box-header" style="color: #f87171;">2. Vẽ Box `Driver` Trùm Cả Xe Máy</div>
+          <p class="box-desc">Vẽ box ôm luôn xe máy thay vì chỉ ôm khít người điều khiển. (Quy tắc mới: chỉ đánh dấu người lái, không vẽ xe).</p>
+        </div>
+
+        <div class="content-box" style="border-left: 4px solid #ef4444;">
+          <div class="box-header" style="color: #f87171;">3. Quên Checkbox `occluded` Trong Đám Đông</div>
+          <p class="box-desc">Xe máy đi chen chúc che khuất lẫn nhau nhưng quên không tích chọn cờ che khuất <code>occluded: true</code>.</p>
+        </div>
+
+        <div class="content-box" style="border-left: 4px solid #ef4444;">
+          <div class="box-header" style="color: #f87171;">4. Quên Checkbox `truncated` Sát Mép Ảnh</div>
+          <p class="box-desc">Vật thể chạm hoặc cắt ngang cạnh khung ảnh nhưng không kích hoạt thuộc tính <code>truncated: true</code>.</p>
+        </div>
+      </div>
+
+      <div class="content-box" style="border-left: 4px solid #ef4444; margin-top: 14px;">
+        <div class="box-header" style="color: #f87171;">5. Bỏ Sót Vật Thể Nhỏ Ở Xa Ngã Tư ($8 - 15\text{px}$)</div>
+        <p class="box-desc">Nghĩ rằng vật thể nhỏ là Ignore dù mắt thường vẫn phân biệt được bóng dáng người lái xe hoặc ô tô ở ngã tư.</p>
+      </div>
+    </div>
+
+    <!-- SLIDE 10: QA FLOW & SUMMARY -->
+    <div class="slide" data-slide="10">
+      <div>
+        <div class="slide-badge" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; border-color: rgba(168, 85, 247, 0.35);">
+          TỔNG KẾT & THẢO LUẬN
+        </div>
+        <h2 class="slide-title">Quy Trình QA 4 Lớp & Hỏi Đáp (Q&A)</h2>
+        <p class="slide-subtitle">Đảm bảo độ chính xác dữ liệu chuyển giao sang nhóm phản biện (Peer Team).</p>
+      </div>
+
+      <div class="grid-4" style="margin: 16px 0;">
+        <div class="content-box" style="text-align: center;">
+          <div style="font-size: 24px;">🔍</div>
+          <div class="box-header" style="justify-content: center; font-size: 15px;">1. Self-Check</div>
+          <p class="box-desc" style="font-size: 12.5px;">Annotator tự rà soát theo 5 lỗi phổ biến trước khi submit.</p>
+        </div>
+
+        <div class="content-box" style="text-align: center;">
+          <div style="font-size: 24px;">👥</div>
+          <div class="box-header" style="justify-content: center; font-size: 15px;">2. Peer Review</div>
+          <p class="box-desc" style="font-size: 12.5px;">Kiểm tra chéo nội bộ 20% mẫu ngẫu nhiên.</p>
+        </div>
+
+        <div class="content-box" style="text-align: center;">
+          <div style="font-size: 24px;">🔒</div>
+          <div class="box-header" style="justify-content: center; font-size: 15px;">3. Gold Freeze</div>
+          <p class="box-desc" style="font-size: 12.5px;">Đóng băng bộ 11 quyết định vàng cho tập Blind Pack.</p>
+        </div>
+
+        <div class="content-box" style="text-align: center;">
+          <div style="font-size: 24px;">🚀</div>
+          <div class="box-header" style="justify-content: center; font-size: 15px;">4. Handoff</div>
+          <p class="box-desc" style="font-size: 12.5px;">Chuyển giao cho nhóm bạn và chấm điểm độc lập.</p>
+        </div>
+      </div>
+
+      <div class="callout-pill" style="margin-top: 10px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(14, 165, 233, 0.15)); border-color: rgba(16, 185, 129, 0.3);">
+        <div class="icon">💬</div>
+        <div class="text">
+          <strong style="color: #34d399; font-size: 16px;">Cảm ơn thầy và các bạn đã lắng nghe!</strong><br>
+          Nhóm 09 xin mời các thành viên trong lớp đặt câu hỏi hoặc đóng góp ý kiến về quy chuẩn gán nhãn!
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer Nav Controls -->
+  <footer>
+    <div class="key-hints">
+      <span><span class="kbd">←</span> / <span class="kbd">→</span> Chuyển Slide</span>
+      <span><span class="kbd">N</span> Kịch bản (Notes)</span>
+      <span><span class="kbd">F</span> Toàn màn hình</span>
+      <span><span class="kbd">O</span> Tổng quan (Grid)</span>
+    </div>
+
+    <div class="nav-buttons">
+      <button class="btn-nav" id="btnPrev" disabled>
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"></path></svg>
+        Trang trước
+      </button>
+      <button class="btn-nav" id="btnNext">
+        Trang sau
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"></path></svg>
+      </button>
+    </div>
+  </footer>
+
+  <!-- Overview Grid Modal -->
+  <div class="overview-modal" id="overviewModal">
+    <div class="overview-header">
+      <h2 style="font-size: 24px; font-weight: 700; color: white;">Danh Mục Các Slide Trình Bày</h2>
+      <button class="btn-icon" id="btnCloseOverview">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+    <div class="overview-grid" id="overviewGrid">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <!-- Speaker Notes Teleprompter Drawer -->
+  <div class="speaker-notes-drawer" id="notesDrawer">
+    <div class="notes-header">
+      <span id="notesTitle">🎙️ KỊCH BẢN THUYẾT TRÌNH (SLIDE 01)</span>
+      <button class="btn-icon" id="btnCloseNotes" style="width: 26px; height: 26px;">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+    </div>
+    <div class="notes-body" id="notesBody">
+      <!-- Injected by JS -->
+    </div>
+  </div>
+
+  <script>
+    // Speaker Notes Script per slide
+    const speakerScripts = [
+      "Kính chào thầy và các bạn! Hôm nay đại diện Nhóm 09, em xin trình bày bộ Quy chuẩn gán nhãn 2D Bounding Box cho Phương tiện & Người tham gia giao thông (Version v2). Bộ quy chuẩn đã chuẩn hóa 7 class, 2 attribute và giải quyết triệt để các tình huống biên phức tạp.",
+      "Thưa thầy và các bạn, đây là hệ thống 7 Object Classes và 2 Attributes: Car (xe con 4-9 chỗ), Bus, Truck, Pickup; Driver (người lái xe 2 bánh), Pedestrian (người đi bộ/không ngồi trên xe), Motorcycle (xe máy đỗ tĩnh). Hai thuộc tính là occluded (>10% bị che) và truncated (chạm mép viền ảnh).",
+      "⭐ ĐIỂM TRỌNG TÂM NHẤT: Driver CHỈ ĐÁNH DẤU NGƯỜI LÁI, KHÔNG ĐÁNH DẤU PHƯƠNG TIỆN. Box kéo từ đầu người tới chân. Tuyệt đối không kéo box trùm cả xe máy xuống tận mặt đất như quy ước cũ, để tránh làm méo mó tỷ lệ con người trong hệ thống ADAS.",
+      "Ma trận phân định 3 trường hợp: 1. Ngồi trên xe lái -> Driver (chỉ ôm người). 2. Không ngồi trên xe (đi bộ hoặc dắt xe) -> Pedestrian; xe dắt bên cạnh gán là Motorcycle. 3. Xe máy đỗ vỉa hè -> Motorcycle. Xe chở 2 người: người lái là Driver, người ngồi sau là Pedestrian.",
+      "Quy chuẩn hình học xe con (Car): Bắt buộc ôm khít cả bánh xe chạm mặt đường và 2 gương chiếu hậu 2 bên. Tuyệt đối KHÔNG kéo box trùm bóng đổ trên đường nhựa hay bóng phản chiếu trên vũng nước mưa. Dung sai tối đa ±2px.",
+      "Về thuộc tính: occluded bật true khi bị che khuất >10% diện tích (che >80% không rõ thì bỏ qua). truncated bật true khi chạm mép khung ảnh. Cả hai mặc định là false nên annotator luôn phải chủ động kiểm tra kỹ trước khi Save.",
+      "Xử lý chùm xe máy ngã tư đông đúc: Vẽ từng box Driver riêng cho từng người lái. Chấp nhận các box đè lên nhau (overlap). Xe sau bị che thì tích occluded: true. Xe buýt to lớn giữa dòng xe máy vẽ trùm thân xe và bật occluded: true.",
+      "Giới hạn kích thước và môi trường: Ngưỡng tối thiểu ≥ 8px, nhận diện được hình bóng xe/người là BẮT BUỘC gán nhãn, tận dụng zoom 400-600%. Trời mưa, đêm tối chỉ lấy cấu kiện cơ học, cắt bỏ toàn bộ vệt đèn pha và bóng nước.",
+      "5 lỗi phổ biến cần kiểm tra trước khi nộp bài: 1. Cắt cụt gương/bánh xe Car. 2. Vẽ box Driver trùm cả xe máy. 3. Quên tích occluded trong đám đông. 4. Quên tích truncated ở mép ảnh. 5. Bỏ sót xe nhỏ 8-15px ở xa.",
+      "Quy trình QA 4 lớp của Nhóm 09: Self-check -> Peer review 20% -> Gold freeze 11 quyết định vàng -> Handoff chuyển giao độc lập. Em xin chân thành cảm ơn thầy và các bạn đã lắng nghe, mời lớp cùng thảo luận và đặt câu hỏi!"
+    ];
+
+    // Slide Navigation Controller
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    let currentIndex = 0;
+
+    const progressFill = document.getElementById('progressFill');
+    const slideCounter = document.getElementById('slideCounter');
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+    const btnOverview = document.getElementById('btnOverview');
+    const btnFullscreen = document.getElementById('btnFullscreen');
+    const overviewModal = document.getElementById('overviewModal');
+    const btnCloseOverview = document.getElementById('btnCloseOverview');
+    const overviewGrid = document.getElementById('overviewGrid');
+
+    const btnNotes = document.getElementById('btnNotes');
+    const notesDrawer = document.getElementById('notesDrawer');
+    const btnCloseNotes = document.getElementById('btnCloseNotes');
+    const notesTitle = document.getElementById('notesTitle');
+    const notesBody = document.getElementById('notesBody');
+
+    function updateSlides(newIndex) {
+      if (newIndex < 0 || newIndex >= totalSlides) return;
+
+      slides.forEach((slide, idx) => {
+        slide.classList.remove('active', 'prev', 'next');
+        if (idx === newIndex) {
+          slide.classList.add('active');
+        } else if (idx < newIndex) {
+          slide.classList.add('prev');
+        } else {
+          slide.classList.add('next');
+        }
+      });
+
+      currentIndex = newIndex;
+
+      // Update progress & counter
+      const progressPercent = ((currentIndex + 1) / totalSlides) * 100;
+      progressFill.style.width = `${progressPercent}%`;
+      slideCounter.textContent = `${String(currentIndex + 1).padStart(2, '0')} / ${String(totalSlides).padStart(2, '0')}`;
+
+      // Update speaker notes
+      notesTitle.textContent = `🎙️ KỊCH BẢN THUYẾT TRÌNH (SLIDE ${String(currentIndex + 1).padStart(2, '0')})`;
+      notesBody.textContent = speakerScripts[currentIndex] || "";
+
+      // Update button states
+      btnPrev.disabled = currentIndex === 0;
+      btnNext.disabled = currentIndex === totalSlides - 1;
+
+      // Update overview active item
+      document.querySelectorAll('.thumb-card').forEach((thumb, idx) => {
+        thumb.classList.toggle('active', idx === currentIndex);
+      });
+    }
+
+    // Populate Overview Modal
+    slides.forEach((slide, idx) => {
+      const titleEl = slide.querySelector('.slide-title');
+      const titleText = titleEl ? titleEl.textContent.trim() : `Slide ${idx + 1}`;
+      
+      const thumb = document.createElement('div');
+      thumb.className = `thumb-card ${idx === 0 ? 'active' : ''}`;
+      thumb.innerHTML = `
+        <div class="thumb-num">SLIDE ${String(idx + 1).padStart(2, '0')}</div>
+        <div class="thumb-title">${titleText}</div>
+      `;
+      thumb.addEventListener('click', () => {
+        updateSlides(idx);
+        overviewModal.classList.remove('open');
+      });
+      overviewGrid.appendChild(thumb);
+    });
+
+    // Event Listeners
+    btnPrev.addEventListener('click', () => updateSlides(currentIndex - 1));
+    btnNext.addEventListener('click', () => updateSlides(currentIndex + 1));
+
+    btnOverview.addEventListener('click', () => overviewModal.classList.add('open'));
+    btnCloseOverview.addEventListener('click', () => overviewModal.classList.remove('open'));
+
+    btnNotes.addEventListener('click', () => notesDrawer.classList.toggle('open'));
+    btnCloseNotes.addEventListener('click', () => notesDrawer.classList.remove('open'));
+
+    btnFullscreen.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    });
+
+    // Keyboard Shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (overviewModal.classList.contains('open')) {
+        if (e.key === 'Escape' || e.key === 'o' || e.key === 'O') {
+          overviewModal.classList.remove('open');
+        }
+        return;
+      }
+
+      switch (e.key) {
+        case 'ArrowRight':
+        case ' ':
+        case 'PageDown':
+          e.preventDefault();
+          updateSlides(currentIndex + 1);
+          break;
+        case 'ArrowLeft':
+        case 'Backspace':
+        case 'PageUp':
+          e.preventDefault();
+          updateSlides(currentIndex - 1);
+          break;
+        case 'Home':
+          e.preventDefault();
+          updateSlides(0);
+          break;
+        case 'End':
+          e.preventDefault();
+          updateSlides(totalSlides - 1);
+          break;
+        case 'f':
+        case 'F':
+          e.preventDefault();
+          btnFullscreen.click();
+          break;
+        case 'o':
+        case 'O':
+          e.preventDefault();
+          overviewModal.classList.toggle('open');
+          break;
+        case 'n':
+        case 'N':
+          e.preventDefault();
+          notesDrawer.classList.toggle('open');
+          break;
+        case 'Escape':
+          overviewModal.classList.remove('open');
+          notesDrawer.classList.remove('open');
+          break;
+      }
+    });
+
+    // Initialize first state
+    updateSlides(0);
+  </script>
+</body>
+</html>

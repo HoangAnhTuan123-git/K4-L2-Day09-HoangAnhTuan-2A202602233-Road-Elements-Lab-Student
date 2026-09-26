@@ -1,1 +1,6 @@
 id,task,sample,case,rule,evidence,status,proposed_by,ratified_by,date
+DL-LANE-01,lane,bb890202_4,Vạch mờ bị bóng đổ,Vạch kẻ bị bóng râm che khuất ngắt quãng nhưng vẫn nhìn thấy vết sơn đứt đoạn thì tiếp tục kéo polyline không ngắt,Ảnh 4 bb890202 có bóng cây loang lổ,ratified,Hoàng Anh Tuấn,Hoàng Anh Tuấn,2026-09-26
+DL-DRIV-01,drivable,core_0,Mép ranh giới bó vỉa,Polygon vùng drivable phải bám sát mép chân đá bó vỉa không trùm lên phần mặt gạch vỉa hè dù cùng màu xám,Ảnh core_0 góc dưới bên phải,ratified,Hoàng Anh Tuấn,Hoàng Anh Tuấn,2026-09-26
+DL-SIGN-01,traffic_sign,00073.png,Biển nhỏ ở xa không đọc được,Biển nhỏ có kích thước < 15px không đọc rõ chữ hoặc số thì gán sign_class=unknown và readable=false,Ảnh 00073.png biển hậu cảnh xa,ratified,Hoàng Anh Tuấn,Hoàng Anh Tuấn,2026-09-26
+DL-SIGN-02,traffic_sign,00223.png,Biển hết hạn chế tốc độ,Biển báo hủy bỏ hiệu lực hạn chế tốc độ gán vào family other theo schema GTSDB,Ảnh 00223.png biển số 32,ratified,Hoàng Anh Tuấn,Hoàng Anh Tuấn,2026-09-26
+DL-LGT-01,traffic_light,dayClip5_f19,Frame chuyển giao trạng thái đèn vàng,Keyframe đặt ngay tại frame đầu tiên bóng đèn vàng phát sáng không đợi đến khi sáng cực đại,dayClip5 frame 19 bóng vàng vừa lóe,ratified,Hoàng Anh Tuấn,Hoàng Anh Tuấn,2026-09-26

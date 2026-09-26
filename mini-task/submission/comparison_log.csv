@@ -1,1 +1,9 @@
 task,sample,object,difference,error_type,who_is_right,action,note
+lane,bb890202_0,lane_marking,Polyline ôm khít vạch kẻ đứt đoạn đến mép bóng cây,geometry,me,keep,Vẽ chính xác theo vạch nhìn thấy dù có bóng râm
+lane,bb890202_4,lane_marking,Reference bỏ sót đoạn vạch kẻ mờ sát lề đường bên phải,missing,me,add_rule,Bổ sung quy tắc nhận diện vạch mờ có độ tương phản thấp
+drivable,core_0,drivable_area,Mép polygon của reference hơi lấn 4px lên vỉa hè bê tông,geometry,me,keep,Cắt sát gờ mép bó vỉa đúng định nghĩa drivable
+drivable,core_3,drivable_area,Vùng chuyển làn xe phía trước chia thành 2 polygon con,guideline_gap,guideline_gap,escalate,Cần làm rõ khi nào gộp khi nào tách polygon đa làn
+traffic_sign,00026.png,traffic_sign,Reference thiếu cờ readable và relevant_to_ego,attribute,me,keep,Bổ sung đầy đủ 2 attribute theo schema bài học
+traffic_sign,00073.png,traffic_sign,Biển nhỏ ở xa bị nhòe khó phân biệt giữa cấm và cảnh báo,class,guideline_gap,add_rule,Quy ước gán class unknown và readable=false
+traffic_light,dayClip5_f19,traffic_light,Frame 19 đèn chuyển vàng reference giữ nguyên track me cập nhật state,temporal,me,keep,Cập nhật đúng frame bắt đầu phát sáng bóng vàng
+traffic_light,dayClip5_f25,traffic_light,Đèn phụ rẽ trái không có trong reference LISA,missing,me,keep,Giữ lại track đèn rẽ trái với relevance=not_relevant

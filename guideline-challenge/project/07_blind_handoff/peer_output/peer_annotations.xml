@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<annotations>
+  <version>1.1</version>
+  <meta>
+    <task>
+      <id>19</id>
+      <name>peer_blind_annotations</name>
+      <size>5</size>
+      <mode>annotation</mode>
+    </task>
+  </meta>
+  <image id="0" name="BDD17.jpg" width="1280" height="720">
+    <box label="Car" occluded="0" source="manual" xtl="512.40" ytl="340.20" xbr="680.50" ybr="445.80" z_order="0">
+      <attribute name="occluded">false</attribute>
+      <attribute name="truncated">false</attribute>
+    </box>
+  </image>
+  <image id="1" name="BDD18.jpg" width="1280" height="720">
+    <box label="Car" occluded="0" source="manual" xtl="420.00" ytl="290.50" xbr="590.20" ybr="420.00" z_order="0">
+      <attribute name="occluded">false</attribute>
+      <attribute name="truncated">false</attribute>
+    </box>
+  </image>
+  <image id="2" name="BDD22.jpg" width="1280" height="720">
+    <box label="Car" occluded="0" source="manual" xtl="310.00" ytl="320.00" xbr="480.00" ybr="430.00" z_order="0">
+      <attribute name="occluded">false</attribute>
+      <attribute name="truncated">false</attribute>
+    </box>
+  </image>
+  <image id="3" name="BDD24.jpg" width="1280" height="720">
+    <box label="Car" occluded="0" source="manual" xtl="450.00" ytl="310.00" xbr="620.00" ybr="435.00" z_order="0">
+      <attribute name="occluded">false</attribute>
+      <attribute name="truncated">false</attribute>
+    </box>
+  </image>
+  <image id="4" name="BDD26.jpg" width="1280" height="720">
+    <box label="Driver" occluded="1" source="manual" xtl="560.00" ytl="280.00" xbr="610.00" ybr="390.00" z_order="0">
+      <attribute name="occluded">true</attribute>
+      <attribute name="truncated">false</attribute>
+    </box>
+  </image>
+</annotations>

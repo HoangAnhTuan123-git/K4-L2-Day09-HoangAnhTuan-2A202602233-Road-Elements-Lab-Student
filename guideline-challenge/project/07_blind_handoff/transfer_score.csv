@@ -1,0 +1,12 @@
+sample_id,decision_id,expected,severity,kind,peer_evidence,correct,note
+BDD17,d1,label=Car,major,decision,Car [occluded=false;truncated=false],1,Nhận diện đúng Car trời mưa
+BDD17,d2,geometry: box ôm khít bánh xe và gương không bao gồm bóng phản chiếu dưới nước,minor,geometry,Car [occluded=false;truncated=false],1,Box chuẩn không dính bóng phản chiếu mặt nước
+BDD18,d1,label=Car,critical,decision,Car [occluded=false;truncated=false],1,Nhận diện chính xác Car ban đêm có đèn pha
+BDD18,d2,geometry: box kéo chạm mặt đường lốp xe trong bóng tối,minor,geometry,Car [occluded=false;truncated=false],1,Bánh xe kéo khít sát mặt đường trong bóng tối
+BDD22,d1,label=Car,minor,decision,Car [occluded=false;truncated=false],1,Nhận diện đúng Car cao tốc chạng vạng
+BDD22,d2,occluded=false,minor,decision,Car [occluded=false;truncated=false],1,Đúng thuộc tính occluded=false
+BDD24,d1,label=Car,major,decision,Car [occluded=false;truncated=false],1,Nhận diện đúng Car đường tuyết
+BDD24,d2,geometry: mép box ôm trọn thân xe và gương xe,minor,geometry,Car [occluded=false;truncated=false],1,Khít thân và gương xe
+BDD26,d1,label=Driver,critical,decision,Driver [occluded=true;truncated=false],1,Nhận diện chính xác Driver người lái xe máy ban đêm
+BDD26,d2,occluded=true,major,decision,Driver [occluded=true;truncated=false],1,Gán chính xác cờ occluded=true do bị che khuất
+BDD26,d3,geometry: box chỉ ôm khít người lái xe máy không bao gồm xe,major,geometry,Driver [occluded=true;truncated=false],1,Thực hiện chuẩn quy tắc mới chỉ ôm người không ôm xe

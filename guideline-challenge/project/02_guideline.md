@@ -1,6 +1,6 @@
 # Annotation Guideline — Road Vehicles & Human Elements Detection
 
-**Version:** v2 (Updated with Edge Cases)
+**Version:** v3 (Final Post-Peer-Review Handoff)
 
 ---
 
@@ -27,6 +27,7 @@
   - **`Driver` CHỈ áp dụng khi:** Người đang **ngồi trên xe** và **trực tiếp điều khiển xe máy hoặc xe đạp**.
   - **Box `Driver` CHỈ ĐÁNH DẤU NGƯỜI LÁI, KHÔNG CẦN ĐÁNH DẤU PHƯƠNG TIỆN:** Bounding box chỉ ôm khít cơ thể người điều khiển (từ đầu/mũ bảo hiểm xuống đến phần thấp nhất của cơ thể người lái như chân/bàn chân), **không trùm thân xe** hay bánh xe của phương tiện bên dưới, và **không cần đánh dấu phương tiện** đang được điều khiển.
   - **Không ngồi trên xe -> `Pedestrian`:** Bất kỳ ai không ngồi trên xe (đang đi bộ, chạy, đứng cạnh xe, dắt bộ xe máy/xe đạp) đều bắt buộc gán nhãn là **`Pedestrian`**.
+  - **Quy tắc xe máy bị ngã/tai nạn (Fallen / Accident Motorcycles - EC-09):** Nếu xe máy bị tai nạn đổ ngã ra đường và người đã văng khỏi xe, gán xe máy là `Motorcycle`, còn người nằm/ngồi trên đường là `Pedestrian`. Chỉ gán `Driver` khi người vẫn đang ngồi trên xe.
 - **Quy tắc quan trọng cho `Car`:**
   - Label toàn bộ chiếc xe, bắt buộc ôm trọn vẹn cả **bánh xe** (tiếp xúc mặt đường) và **gương chiếu hậu** (hai bên xe).
 - **Quy tắc mật độ cao / Chùm phương tiện (Dense Clusters & Swarms):**

@@ -1,1 +1,2 @@
 time,asker,question,answered_how,guideline_change
+2026-09-26 10:15,Nhóm 4 - Lê Văn Cường,Trường hợp xe máy bị tai nạn đổ ngã trên đường thì có gán nhãn Driver không?,Chỉ gán Driver nếu có người đang ngồi/điều khiển; nếu xe máy đổ và người đã ngã ra đường thì người gán Pedestrian còn xe gán Motorcycle,Bổ sung rõ trường hợp tai nạn ngã xe vào mục 2 guideline v3 và edge case EC-09

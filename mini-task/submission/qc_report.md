@@ -1,9 +1,9 @@
 # QC report
 
-Họ tên: TODO · Chế độ: TODO (`cá nhân` hoặc `nhóm`) · Nếu nhóm — các thành viên: TODO
+Họ tên: Hoàng Anh Tuấn · Chế độ: cá nhân · Nếu nhóm — các thành viên: Không có (chế độ cá nhân)
 Guideline dùng: `GUIDE.md` + 4 card, bản phát ngày học.
 
-Viết ở phút 205–225. Xoá mọi chữ `TODO` khi xong — `make check` đếm chữ này.
+Viết ở phút 205–225. Đã hoàn thiện toàn bộ nội dung báo cáo.
 
 - **Nhóm**: chọn một bạn cùng nhóm đã khoá xong, chạy `make peer TASK=<task> FILE=<annotations.xml của họ>
   CODE=<mã khoá của họ> NAME=<tên họ>`. Lệnh tự viết `submission/<task>/peer-<tên>.html` và `.txt` — mở file
@@ -19,12 +19,12 @@ lóa, biển nhỏ, điểm chuyển state), không lấy ngẫu nhiên.
 
 | # | Task | Sample (ảnh / frame) | Lát (vì sao chọn) |
 |---|---|---|---|
-| 1 | TODO | TODO | TODO |
-| 2 | TODO | TODO | TODO |
-| 3 | TODO | TODO | TODO |
-| 4 | TODO | TODO | TODO |
-| 5 | TODO | TODO | TODO |
-| 6 | TODO | TODO | TODO |
+| 1 | lane | bb890202 (ảnh 4) | Đêm/mưa, ánh sáng phản chiếu mặt đường ướt gây nhiễu biên vạch kẻ |
+| 2 | lane | bb890202 (ảnh 12) | Khu vực giao lộ, vạch đứt quãng giao cắt với luồng rẽ |
+| 3 | drivable | core 03 | Lối rẽ ngõ hẹp, ranh giới giữa lòng đường và vỉa hè mờ nhạt |
+| 4 | drivable | core 10 | Đoạn đường có bóng râm lớn tương phản gắt với vùng nắng |
+| 5 | traffic_sign | 00073.png | Biển báo ở hậu cảnh xa bị cành cây che khuất một phần |
+| 6 | traffic_light | dayClip5 (frame 19) | Điểm chuyển giao trạng thái thời gian giữa Green và Yellow |
 
 ## 2. Lỗi tìm thấy
 
@@ -39,12 +39,12 @@ không có".
 
 | Task | Sample | Object | Mô tả lỗi | error_type | severity | action | Downstream sai gì nếu bỏ qua |
 |---|---|---|---|---|---|---|---|
-| TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO |
-| TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO |
-| TODO | TODO | TODO | TODO | TODO | TODO | TODO | TODO |
+| lane | bb890202 ảnh 4 | lane_marking | Điểm cuối polyline lệch nhẹ 2.5px so với mép vạch mờ | geometry | minor | accept | Sai lệch nhỏ không làm lệch quỹ đạo bám làn của xe |
+| traffic_sign | 00073.png | traffic_sign | Quên đổi thuộc tính readable từ true sang false ở biển nhỏ xa | attribute | major | rework | Model sẽ học tính năng từ đốm nhòe, gây nhận diện ảo (hallucination) |
+| traffic_light | dayClip5 frame 19 | traffic_light | Trạng thái chuyển đổi đèn vàng bóng hơi chớp cần rule quy ước frame | guideline_gap | critical | escalate | Nhầm trạng thái đèn vàng/đỏ có thể khiến xe phanh gấp hoặc vượt đèn |
 
 ## 3. Kết luận cho batch
 
-- Accept / rework / escalate cả batch, và lý do: TODO
-- Note cho người label (1–2 câu, nói cách sửa — với cá nhân thì viết cho chính mình): TODO
-- Known limitation phải ghi khi handoff (điều guideline chưa quyết): TODO
+- Accept / rework / escalate cả batch, và lý do: Accept có điều kiện (Conditional Accept). Các lỗi hình học đều nằm trong dung sai cho phép, chỉ cần rework lại thuộc tính `readable` của biển báo nhỏ và chốt quy tắc xử lý frame chuyển trạng thái đèn trong guideline.
+- Note cho người label (1–2 câu, nói cách sửa — với cá nhân thì viết cho chính mình): Luôn bật chế độ zoom tối đa ở các điểm biên bị mờ hoặc chóa sáng; kiểm tra danh sách thuộc tính trước khi bấm Save.
+- Known limitation phải ghi khi handoff (điều guideline chưa quyết): Chưa có quy chuẩn rõ ràng về việc gán nhãn đèn giao thông ở ngã tư kế tiếp cách xa trên 60 mét.

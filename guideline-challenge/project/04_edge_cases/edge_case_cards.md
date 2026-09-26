@@ -7,9 +7,9 @@ Sample: BDD10
 Scene: City street daytime
 Observation: Người đang ngồi trên yên xe máy di chuyển trên đường phố
 Decision: LABEL
-Expected: 1 box nhãn Driver bao trùm cả người lái và xe máy, occluded=false, truncated=false
-Rationale: Downstream ADAS coi người điều khiển và xe máy là một khối động học di chuyển thống nhất
-Common mistake: Tách rời người lái thành Pedestrian và xe thành Motorcycle
+Expected: 1 box nhãn Driver chỉ ôm khít người lái xe máy từ đầu tới chân, occluded=false, truncated=false
+Rationale: Downstream ADAS tập trung phát hiện chính xác thực thể con người điều khiển tham gia giao thông
+Common mistake: Kéo box trùm cả xe máy hoặc tách rời thành Pedestrian
 Diversity: ambiguity
 
 ---
@@ -95,5 +95,17 @@ Expected: Nhãn Truck (cho xe tải thùng) và Pickup (cho xe có thùng hở)
 Rationale: Phân loại đúng công năng và tải trọng phương tiện cho bài toán giao thông
 Common mistake: Nhầm lẫn xe tải nhỏ thành xe con
 Diversity: ambiguity
+
+---
+
+CASE ID: EC-09
+Sample: image.png
+Scene: Rainy city street accident scene
+Observation: Hiện trường xe máy ngã nằm ngang trên mặt đường ướt, người ngồi bệt cạnh xe và người cúi nâng xe
+Decision: LABEL
+Expected: Xe ngã nhãn Motorcycle (ôm thân xe nằm ngang, cắt bỏ bóng phản chiếu đèn trên mặt nước); Người ngồi bệt nhãn Pedestrian; Người cúi nâng xe nhãn Pedestrian; Người đi xe máy qua nhãn Driver (chỉ ôm người)
+Rationale: Phân định rạch ròi trạng thái tĩnh của xe bị ngã với con người không điều khiển xe và người đang lái xe
+Common mistake: Kéo box xe máy trùm bóng nước hoặc nhầm người ngồi bệt thành Driver
+Diversity: conflict
 
 ---
