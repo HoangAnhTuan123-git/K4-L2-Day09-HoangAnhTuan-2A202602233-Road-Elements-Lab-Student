@@ -146,13 +146,69 @@
 
 ![Edge Case: Hiện trường xe máy ngã đổ và người ngồi bệt trên đường mưa](image.png)
 
+> [!NOTE]
+> **Phân tích Ground Truth & Quy tắc gán nhãn cho case `image.png` (EC-09):**
+> 1. **Xe máy bị ngã nằm ngang trên mặt đường (`Motorcycle`):**
+>    - **Class:** `Motorcycle` (không gán `Driver` vì xe không có người ngồi trên yên điều khiển).
+>    - **Geometry & Boundary:** Bounding box phải bao trọn thân xe nằm ngang, tay lái, bánh xe và biển số xe.
+>    - **Quy tắc bóng nước:** Đáy của box phải kết thúc chính xác tại điểm tiếp xúc cơ học giữa lốp/khung xe với mặt đường nhựa; **tuyệt đối không kéo box trùm vệt phản chiếu ánh đèn xe/đèn đường trên vũng nước**.
+> 2. **Người ngồi bệt trên mặt đường sau tai nạn (`Pedestrian`):**
+>    - **Class:** `Pedestrian` (theo quy tắc mục 2: Bất kỳ ai không ngồi trên xe đều là `Pedestrian`, bất kể trước đó là người lái bị ngã).
+>    - **Attributes:** `occluded: false`, `truncated: false`.
+> 3. **Người cúi xuống đỡ/nâng xe máy (`Pedestrian`):**
+>    - **Class:** `Pedestrian` (người đứng trợ giúp, không điều khiển xe).
+>    - **Attributes:** `occluded: true` (chân/nửa thân dưới bị che khuất một phần bởi xe máy nằm chắn phía trước).
+>    - **Instance Overlap:** Box `Pedestrian` của người này và box `Motorcycle` của xe máy được phép chồng lấn (overlap) tự nhiên.
+> 4. **Người điều khiển xe máy khác đang chạy ngang qua (`Driver`):**
+>    - **Class:** `Driver` (người đang ngồi trên xe và trực tiếp điều khiển xe máy).
+>    - **Quy tắc Driver mới:** Bounding box chỉ ôm khít cơ thể người lái từ đỉnh mũ bảo hiểm xuống bàn chân; **tuyệt đối không bao gồm khung xe hay bánh xe bên dưới, và không cần đánh dấu phương tiện**.
+
 ---
 
-## 10. Common Mistakes & Quality Checklist
+## 10. Common Mistakes & Pre-Submission Checklist
 
-Trước khi hoàn thành và xuất file (Save/Export), kiểm tra các lỗi thường gặp sau:
+### 10.1 Các lỗi thường gặp (Common Mistakes)
 1. ❌ **Cắt cụt gương chiếu hậu hoặc bánh xe của `Car`:** Vẽ box chỉ ôm khung vỏ mà bỏ quên gương 2 bên hoặc mép dưới lốp xe.
 2. ❌ **Bỏ quên người lái trong chùm xe máy:** Trong cảnh đông đúc, bỏ sót các xe máy nhỏ đi xen kẽ hoặc ở xa ngã tư.
 3. ❌ **Nhầm lẫn phạm vi box `Driver`:** Vẽ box trùm cả chiếc xe máy/xe đạp (Đúng: `Driver` chỉ đánh dấu người lái xe máy hoặc xe đạp, ôm khít người lái, không cần đánh dấu phương tiện).
 4. ❌ **Bỏ sót checkbox `occluded` trong đám đông:** Xe máy chen chúc nhau che khuất bánh trước nhưng quên không tích `occluded: true`.
 5. ❌ **Bỏ qua vật thể nhỏ ở ngã tư ($8-15\text{px}$):** Nhầm tưởng vật thể nhỏ là Ignore dù vẫn nhìn rõ hình bóng xe.
+
+### 10.2 Bảng Checklist tự kiểm tra trước khi bấm Submit (Pre-Submission Checklist)
+
+Annotator bắt buộc rà soát 6 bước sau trước khi bấm **Save** và nộp bài:
+- [ ] **1. Quét đối tượng nhỏ (Small Object Scan):** Phóng to (zoom) quét toàn cảnh các ngã tư, làn đường phía xa và đường chân trời; đảm bảo không bỏ sót bất kỳ phương tiện hoặc người nào có kích thước $\ge 8\text{px}$.
+- [ ] **2. Kiểm tra độ khít hình học (Geometry Tightness):** Zoom 200% kiểm tra:
+  - Box `Car` / `Truck` / `Bus`: Đã chạm đáy mặt đường (tiếp xúc lốp xe) và trùm trọn 2 gương chiếu hậu.
+  - Box `Driver`: Chỉ ôm khít từ đỉnh mũ bảo hiểm xuống bàn chân người lái; tuyệt đối không vẽ trùm xe máy/xe đạp.
+  - Box `Motorcycle` (xe đỗ/xe ngã): Ôm sát mép ngoài cùng của xe, không lan ra bóng đổ.
+- [ ] **3. Lọc thuộc tính `occluded` (Occlusion Filter Check):** Dùng tính năng Filter trên CVAT lọc các box có `occluded == false`. Rà soát lại xem có đối tượng nào bị xe khác đè lên trên > 20% mà chưa được bật `occluded: true` hay không.
+- [ ] **4. Rà soát rìa ảnh (Truncation Boundary):** Kiểm tra mọi box nằm ở mép ngoài cùng của bức ảnh (chạm tọa độ x=0, y=0 hoặc mép phải/dưới) đã được tích chọn `truncated: true`.
+- [ ] **5. Loại trừ bóng nước & phản chiếu (Reflection Exclusion):** Ở các cảnh trời mưa hoặc ban đêm ướt đường, kiểm tra đáy các bounding box đã cắt đứt bóng nước phản chiếu chưa.
+- [ ] **6. Không còn box thừa / box rác:** Kiểm tra danh sách đối tượng (Objects list) xem có box nào vô tình bấm nhầm tạo ra kích thước $0\times 0\text{px}$ hay không.
+
+---
+
+## 11. Quy trình Đánh dấu Nghi ngờ cho QA Review (Uncertainty & Escalation Flag)
+
+Khi annotator **không tự tin (uncertain)** vào một đối tượng cụ thể (ví dụ: vật thể ở cự ly xa bị nhòe mờ không rõ `Car` hay `Pickup`, vật thể bị che khuất > 70%, hoặc hiện trường va chạm bất thường), **tuyệt đối không đoán mò** và **không tự ý bỏ qua**. Hãy thực hiện quy trình đánh dấu sau:
+
+### 11.1 Cách tạo Flag đánh dấu trong CVAT
+1. **Vẽ Bounding Box tạm thời:** Vẫn vẽ một bounding box ôm sát vật thể theo phán đoán tốt nhất có thể (best-effort label).
+2. **Tạo CVAT Issue trực tiếp trên đối tượng:**
+   - Bấm chuột phải vào bounding box đó trên ảnh (hoặc rê chuột vào box và bấm phím tắt **`I`** - *Open an Issue*).
+   - Đặt con trỏ comment tại vị trí cần lưu ý trên box.
+3. **Cú pháp ghi chú chuẩn (Standard Tag Syntax):**
+   - Bắt đầu bình luận bằng tiền tố `[UNCERTAIN]` hoặc `[QA-CHECK]`.
+   - Nêu ngắn gọn lý do không tự tin. Ví dụ:
+     - `[UNCERTAIN] Xe ở xa cự ly > 50m, không rõ là SUV hay Pickup do phần đuôi bị mờ.`
+     - `[UNCERTAIN] Người đứng cạnh xe máy có đang dắt xe hay chuẩn bị leo lên xe (Pedestrian vs Driver)?`
+     - `[UNCERTAIN] Góc khuất > 75%, chỉ nhìn thấy một phần bánh xe và đèn hậu.`
+4. **Trạng thái Issue:** Issue sau khi tạo sẽ ở trạng thái **`Open`**. Giữ nguyên trạng thái này khi submit task.
+
+### 11.2 Quy trình QA Lead xử lý
+- **Lọc và phân xử:** QA Lead mở task, chọn bộ lọc **Issues: Open** để duyệt qua 100% các điểm nghi ngờ được đánh dấu.
+- **Quyết định nhãn:**
+  - Nếu guideline đã có quy tắc tương ứng: QA điều chỉnh nhãn/box chuẩn xác, phản hồi giải thích vào comment.
+  - Nếu là tình huống mới chưa có trong guideline (Guideline Gap): QA escalate lên **Spec Owner** để ra quyết định và ghi nhận vào `08_revision_log.md`.
+- **Đóng cờ:** Sau khi giải quyết xong, QA Lead chuyển trạng thái Issue sang **`Resolved`** và **`Closed`**. Bất kỳ batch nào còn Issue ở trạng thái `Open` sẽ không được cấp chứng nhận vượt qua Quality Gate.
