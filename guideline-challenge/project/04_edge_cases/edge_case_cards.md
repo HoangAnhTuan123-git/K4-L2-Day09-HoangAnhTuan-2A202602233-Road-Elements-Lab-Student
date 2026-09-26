@@ -1,27 +1,99 @@
 # Edge-case library
 
-Tối thiểu **8 card**, khuyến nghị 10–12. Một edge case tốt là case mà hai annotator hợp lý có thể làm khác nhau nếu
-guideline chưa rõ. Tám ảnh dễ có label rõ ràng không được tính là edge-case library.
+---
 
-Cần có đủ độ đa dạng: occlusion / truncation / small-far · ambiguous semantics · conflicting road elements · **một case
-critical-risk** · **một case guideline cho phép escalation**.
-
-File này là kho nội bộ của nhóm, **không gửi cho peer**. Card dùng ảnh example/calibration thì chép rule + ví dụ sang
-`02_guideline.md` (mục 7 và 9) để peer đọc được. Card về ảnh blind chỉ nằm ở đây, và decision của nó phải có trong
-`gold_decisions.csv` trước `make freeze`.
-
-`make status` đếm số dòng `CASE ID:` đã điền (đã thay placeholder). Copy khối dưới cho mỗi case.
+CASE ID: EC-01
+Sample: BDD10
+Scene: City street daytime
+Observation: Người đang ngồi trên yên xe máy di chuyển trên đường phố
+Decision: LABEL
+Expected: 1 box nhãn Driver bao trùm cả người lái và xe máy, occluded=false, truncated=false
+Rationale: Downstream ADAS coi người điều khiển và xe máy là một khối động học di chuyển thống nhất
+Common mistake: Tách rời người lái thành Pedestrian và xe thành Motorcycle
+Diversity: ambiguity
 
 ---
 
-CASE ID: TODO
-Sample: TODO (sample_id)
-Scene: TODO
-Observation: TODO — thấy gì trong ảnh
-Decision: TODO — LABEL / IGNORE / UNKNOWN / ESCALATE
-Expected: TODO — class, attribute, geometry cụ thể
-Rationale: TODO — gắn với downstream contract ở `01_problem_statement.md`
-Common mistake: TODO
-Diversity: TODO — occlusion / small_far / ambiguity / conflict / critical / escalation / …
+CASE ID: EC-02
+Sample: BDD12
+Scene: City intersection
+Observation: Ô tô con dừng đèn đỏ bị xe phía trước che khuất một phần cản xe
+Decision: LABEL
+Expected: Nhãn Car, occluded=true, truncated=false, box ôm khít bánh xe và gương nhìn thấy
+Rationale: Bắt buộc gắn cờ occluded để mô hình học cách nhận biết vật thể bị che
+Common mistake: Bỏ quên checkbox occluded khi xe chỉ bị che mất 20%
+Diversity: occlusion
+
+---
+
+CASE ID: EC-03
+Sample: BDD15
+Scene: City sidewalk
+Observation: Người dắt bộ xe máy trên vỉa hè
+Decision: LABEL
+Expected: Tách thành 2 box: 1 box Pedestrian cho người dắt và 1 box Motorcycle cho xe máy
+Rationale: Người không ngồi trên xe điều khiển thì động học di chuyển là người đi bộ
+Common mistake: Nhầm người dắt xe thành Driver
+Diversity: ambiguity
+
+---
+
+CASE ID: EC-04
+Sample: BDD17
+Scene: Rainy city street
+Observation: Ô tô con di chuyển trên mặt đường ướt tạo bóng phản chiếu lớn
+Decision: LABEL
+Expected: Nhãn Car, box đáy dừng lại ở điểm tiếp xúc lốp xe, không bao gồm vệt bóng nước
+Rationale: Kéo box lan ra vệt bóng nước làm sai lệch kích thước 3D thực tế của xe
+Common mistake: Kéo mép dưới hộp chữ nhật xuống hết vệt bóng nước
+Diversity: conflict
+
+---
+
+CASE ID: EC-05
+Sample: BDD18
+Scene: Night city street
+Observation: Xe ô tô ngược chiều rọi đèn pha chói lóa trong đêm tối
+Decision: LABEL
+Expected: Nhãn Car, box ôm khít thân xe trong bóng tối, severity critical
+Rationale: Xe ban đêm có nguy cơ đâm va cực cao nếu bộ lọc kích thước bị lóa sáng đánh lừa
+Common mistake: Chỉ vẽ vùng sáng đèn pha mà bỏ sót toàn bộ thân xe và bánh xe
+Diversity: critical
+
+---
+
+CASE ID: EC-06
+Sample: BDD24
+Scene: Snowy road
+Observation: Xe ô tô chạy sát mép trái khung hình bị cắt một phần thân
+Decision: LABEL
+Expected: Nhãn Car, truncated=true, mép trái box chạm sát x=0
+Rationale: Đánh dấu truncated giúp thuật toán nhận biết vật thể chưa vào hết khung nhìn
+Common mistake: Quên bật checkbox truncated
+Diversity: truncation
+
+---
+
+CASE ID: EC-07
+Sample: BDD26
+Scene: Night dark street
+Observation: Đốm mờ trong bóng tối ở rất xa không rõ là cọc tiêu hay người
+Decision: ESCALATE
+Expected: Đánh dấu ESCALATE / needs_review nếu < 8px không nhận diện được hình thái
+Rationale: Tránh đưa dữ liệu nhiễu vào tập huấn luyện khi con người không thể chắc chắn
+Common mistake: Tự đoán mò nhãn khi bằng chứng thị giác không đủ
+Diversity: escalation
+
+---
+
+CASE ID: EC-08
+Sample: BDD11
+Scene: Highway daytime
+Observation: Xe tải chở hàng thùng kín loại nhỏ chạy cạnh xe bán tải
+Decision: LABEL
+Expected: Nhãn Truck (cho xe tải thùng) và Pickup (cho xe có thùng hở)
+Rationale: Phân loại đúng công năng và tải trọng phương tiện cho bài toán giao thông
+Common mistake: Nhầm lẫn xe tải nhỏ thành xe con
+Diversity: ambiguity
 
 ---

@@ -1,8 +1,8 @@
-CVAT task reference — thay mọi placeholder mới là xong.
+CVAT task reference
 
-CVAT version: TODO
-Task calibration (tên, id): TODO
-Task bản cuối theo guideline v3 (tên, id) hoặc lý do không có: TODO
-File export đã nộp (đường dẫn trong repo): TODO
-Guideline version dán trong Guide của task: TODO
-Ghi chú cho người tiếp nhận: TODO
+CVAT version: v2.74.1 (Local Docker)
+Task calibration (tên, id): team09-calib-v1 (Task #18)
+Task bản cuối theo guideline v3 (tên, id) hoặc lý do không có: team09-final-v2 (Task #18)
+File export đã nộp (đường dẫn trong repo): archive (1)/selected_10_images/job_18_annotations_2026_09_26_03_36_33_coco 1.0.zip
+Guideline version dán trong Guide của task: v2
+Ghi chú cho người tiếp nhận: Schema gồm 7 classes: Car, Motorcycle, Pickup, Truck, Bus, Pedestrian, Driver với 2 attributes: occluded, truncated. Dữ liệu bao gồm các trường hợp xe đông đúc và vật thể nhỏ ở cự ly xa.

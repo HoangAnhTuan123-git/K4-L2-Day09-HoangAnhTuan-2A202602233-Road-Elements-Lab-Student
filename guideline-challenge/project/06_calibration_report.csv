@@ -1,1 +1,4 @@
 sample_id,item,values_by_annotator,diagnosis,action,rule_change
+BDD10,traffic_rider,an=Motorcycle+Pedestrian; binh=Driver,guideline_gap,revise_rule,Quy định thống nhất Driver bao gồm cả người lái xe và xe khi đang ngồi trên xe điều khiển
+BDD12,car_geometry,an=box_no_mirror; binh=box_with_mirror,guideline_gap,revise_rule,Quy định xe Car bắt buộc bao gồm cả bánh xe tiếp xúc mặt đường và hai gương chiếu hậu
+BDD15,pedestrian_near_bike,an=Pedestrian_no_occlusion; binh=Pedestrian_occluded,guideline_gap,add_example,Người đi bộ bị xe máy che khuất phần chân phải tích chọn occluded:true

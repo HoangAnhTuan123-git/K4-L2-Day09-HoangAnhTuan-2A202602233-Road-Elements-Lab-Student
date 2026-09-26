@@ -1,16 +1,16 @@
 # Team
 
-Điền trước phút 15. Thay mọi placeholder; còn sót thì `make status` báo ở gate G1.
-
-- **Team:** TODO (ví dụ `team07`)
-- **Nhóm peer test bài của mình:** TODO (cặp A ↔ B; số nhóm lẻ thì ring 3 nhóm A → B → C → A — Lab Coach công bố)
-- **Nhóm mình test bài của:** TODO
-- **Problem family:** TODO (xem README mục "1 · Chọn bài toán")
-- **Nguồn ảnh:** TODO (`bdd100k`, `gtsdb`, `lisa` — chỉ dùng ảnh trong `data/`)
+- **Team:** Team09
+- **Nhóm peer test bài của mình:** PeerTeam (TBD)
+- **Nhóm mình test bài của:** PeerTeam (TBD)
+- **Problem family:** Traffic participants & motorized road vehicles detection
+- **Nguồn ảnh:** bdd100k
 
 | Thành viên | GitHub | Vai trò chính | File phụ trách |
 |---|---|---|---|
-| TODO | TODO | TODO | TODO |
+| Hoàng Anh Tuấn | HoangAnhTuan123-git | Spec & Guideline Owner | 01, 02 |
+| Thành viên 2 | Member02 | CVAT & Gold Owner | 03_*, sample_pack.csv, 04_* |
+| Thành viên 3 | Member03 | QA & Calibration Owner | 05, 06, 07, 08 |
 
 Gợi ý chia vai (nhóm 2–3 người thì gộp): **spec owner** (`01`, `02`), **CVAT owner** (`03_*`, `sample_pack.csv`,
 `09`), **gold owner** (`04_edge_cases/`), **QA owner** (`05`, `06`, `07_blind_handoff/`). Mỗi file một người sửa

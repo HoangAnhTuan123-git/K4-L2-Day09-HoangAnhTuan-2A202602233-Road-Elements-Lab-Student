@@ -66,7 +66,7 @@
 
 | Attribute | Kiểu | Giá trị | Tiêu chí đánh dấu (`true`) |
 |---|---|---|---|
-| **`occluded`** | Checkbox | `true` / `false` | Đánh dấu khi đối tượng bị **vật khác che khuất một phần** (bị xe khác che, bị cây xanh, cột đèn, biển báo hoặc người che mất > 10% diện tích). Ví dụ: Xe buýt bị xe máy che cản trước; người lái xe máy đi sát sau xe khác bị che bánh trước. |
+| **`occluded`** | Checkbox | `true` / `false` | Đánh dấu khi đối tượng bị **vật khác che khuất một phần** (bị xe khác che, bị cây xanh, cột đèn, biển báo hoặc người che mất > 10% diện tích). Ví dụ: Xe buýt bị xe máy che cản trước; người lái xe máy đi sát sau xe khác bị che bánh trước. |modify the rule of driver, only label the person who drive motocycle or bike, no need to label the vehicle
 | **`truncated`** | Checkbox | `true` / `false` | Đánh dấu khi đối tượng **chạm hoặc vượt ra ngoài mép ảnh** (bị cắt cụt đầu, đuôi, nóc hoặc bánh xe do góc nhìn camera). |
 
 ---
