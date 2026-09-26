@@ -1,1 +1,16 @@
 sample_id,split,tags,reason
+BDD01,example,normal,Ban ngày đường cao tốc tầm nhìn tốt làm mẫu xe chuẩn
+BDD02,example,normal;edge,Đường phố ban ngày làm ví dụ xe con và người đi bộ
+BDD04,example,normal,Giao lộ ban ngày làm ví dụ các loại xe
+BDD07,example,normal,Xe chạy tốc độ cao trên cao tốc
+BDD08,calibration,normal,Cao tốc thử nghiệm độ thống nhất bounding box xe con
+BDD10,calibration,edge;occlusion,Xe che khuất lẫn nhau trên đường phố thử nghiệm thuộc tính occluded
+BDD11,calibration,edge,Đường phố nhiều làn thử nghiệm phân loại xe tải và xe con
+BDD12,calibration,edge;occlusion,Khu vực dừng đèn đỏ đông đúc thử nghiệm chùm phương tiện
+BDD13,calibration,normal,Đường phố rõ nét kiểm tra dung sai viền hộp
+BDD15,calibration,edge,Người đi bộ qua đường kiểm tra quy tắc Pedestrian vs Driver
+BDD17,blind,edge;low_visibility,Trời mưa đường ướt thử nghiệm tách bóng phản chiếu trên mặt đường
+BDD18,blind,critical;low_visibility,Ban đêm đèn rọi chói thử nghiệm bắt trọn bánh xe và gương xe trong bóng tối
+BDD22,blind,normal,Chạng vạng cao tốc kiểm tra xe chạy thẳng bình thường
+BDD24,blind,edge;low_visibility,Trời tuyết rơi che phủ mép đường thử nghiệm xe bán tải và xe con
+BDD26,blind,ambiguity;critical;low_visibility,Ban đêm phương tiện trong bóng tối thử nghiệm độ tin cậy nhận diện và thuộc tính occluded

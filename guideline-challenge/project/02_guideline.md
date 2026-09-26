@@ -1,6 +1,6 @@
 # Annotation Guideline — Road Vehicles & Human Elements Detection
 
-**Version:** v1
+**Version:** v2 (Updated with Edge Cases)
 
 ---
 
@@ -11,11 +11,12 @@
   - Mọi phương tiện cơ giới di chuyển hoặc đang đỗ trên đường: `Car`, `Motorcycle`, `Pickup`, `Truck`, `Bus`.
   - Người tham gia giao thông: `Pedestrian` (người đi bộ/không ngồi trên xe), `Driver` (người ngồi trên xe điều khiển xe, bao gồm cả người và xe).
   - Phương tiện bị che khuất một phần (occluded) hoặc bị cắt ở rìa ảnh (truncated) miễn là còn đủ dấu hiệu nhận dạng (≥ 20% nhìn thấy hoặc nhận diện được loại phương tiện).
+  - Phương tiện hoặc người ở xa có kích thước nhỏ (chiều cao hoặc chiều rộng $\ge 8\text{px}$) nhưng mắt thường vẫn nhận diện được hình dạng.
 - **Out-of-Scope (Bỏ qua - Ignore):**
   - Xe đồ chơi, mô hình quảng cáo.
   - Hình ảnh xe cộ hoặc người in trên pano, áp phích, thân xe buýt.
   - Bóng phản chiếu của xe trên mặt đường ướt hoặc cửa kính.
-  - Xe hoặc người ở khoảng cách cực xa có kích thước < 15 pixel và không thể phân biệt đặc trưng bằng mắt thường.
+  - Vật thể ở cực xa có kích thước $< 8\text{px}$ hoặc nhòe mờ hoàn toàn thành đốm màu không thể xác định loại.
 
 ---
 
@@ -28,6 +29,8 @@
   - **Không ngồi trên xe -> `Pedestrian`:** Bất kỳ ai không ngồi trên xe (đang đi bộ, chạy, đứng cạnh xe, dắt bộ xe máy/xe đạp) đều bắt buộc gán nhãn là **`Pedestrian`**.
 - **Quy tắc quan trọng cho `Car`:**
   - Label toàn bộ chiếc xe, bắt buộc ôm trọn vẹn cả **bánh xe** (tiếp xúc mặt đường) và **gương chiếu hậu** (hai bên xe).
+- **Quy tắc mật độ cao / Chùm phương tiện (Dense Clusters & Swarms):**
+  - Khi nhiều xe máy hoặc ô tô chen chúc (như ở ngã tư đèn đỏ hoặc ùn tắc): vẽ từng box riêng cho từng cá thể. Chấp nhận các box đè/chồng lấn lên nhau (overlap).
 
 ---
 
@@ -37,7 +40,8 @@
 - **Độ khít (Tightness):** Hộp phải ôm **khít toàn bộ các pixel nhìn thấy** (visible pixels) của đối tượng:
   - **Đối với `Car`:** Bounding box phải bao phủ **toàn bộ xe, gồm cả bánh xe và gương chiếu hậu**, cản trước, cản sau, giá nóc (nếu có).
   - **Đối với `Driver`:** Bounding box kéo từ đỉnh đầu/mũ bảo hiểm của người lái xuống tới điểm tiếp đất thấp nhất của bánh xe, và từ điểm trước nhất tới điểm sau cùng của người + xe.
-  - **Đối với các phương tiện khác (`Truck`, `Bus`, `Pickup`, `Motorcycle` không người lái):** Ôm sát toàn bộ thân xe, bánh xe, gương, thùng hàng.
+  - **Đối với `Bus` / `Truck`:** Ôm sát nóc xe, gương tai thỏ lớn, và mép dưới cùng của gầm xe/bánh xe nhìn thấy.
+  - **Đối với `Motorcycle` (không người):** Ôm sát toàn bộ thân xe, tay lái, bánh xe và biển số xe đỗ.
   - **KHÔNG bao gồm:** Bóng đổ (shadow) của xe trên mặt đường, khói xả, vệt sáng đèn pha rọi ra ngoài.
 - **Dung sai (Tolerance):** Độ lệch mép hộp không quá **±2 pixel** so với điểm biên ngoài cùng của vật thể.
 - **Không vẽ Amodal:** Chỉ vẽ trên phần nhìn thấy, không tưởng tượng phần bị che khuất ngầm dưới lòng đất hay sau xe khác.
@@ -48,38 +52,44 @@
 
 ### 4.1 Danh sách Class (Object Classes)
 
-| Class | Định nghĩa & Tiêu chí nhận diện | Yêu cầu Bounding Box đặc biệt | Ví dụ |
+| Class | Định nghĩa & Tiêu chí nhận diện | Yêu cầu Bounding Box đặc biệt | Ví dụ trong Edge Cases |
 |---|---|---|---|
-| **`Car`** | Xe con, xe du lịch chở người từ 4–9 chỗ, sedan, hatchback, SUV, crossover, xe taxi, xe cảnh sát con. | **Bắt buộc ôm cả xe gồm bánh xe và 2 gương chiếu hậu.** Không cắt cụt gương xe hay bánh xe. | Toyota Vios, Camry, Honda CR-V, Mazda 3, Kia Morning. |
-| **`Driver`** | Người đang **ngồi trên xe và trực tiếp điều khiển xe** (xe máy, xe mô tô, xe đạp). | **Bao gồm CẢ NGƯỜI LÁI XE VÀ XE** trong một bounding box duy nhất. | Người đang ngồi lái xe máy trên đường, shipper đang lái xe. |
-| **`Pedestrian`** | Người đi bộ hoặc **bất kỳ ai KHÔNG ngồi trên xe**: đứng, đi, chạy, dắt xe máy, đẩy xe nôi/xe hàng. | Ôm khít cơ thể người (từ đầu đến chân, gồm ba lô/túi xách đang mang). | Người đi bộ, người dắt xe máy hỏng, người đứng chờ đèn đỏ. |
-| **`Pickup`** | Xe bán tải: cabin kín phía trước cho hành khách và **thùng chở hàng hở (open cargo bed)** tách biệt phía sau. | Ôm toàn bộ xe gồm bánh xe, gương chiếu hậu và thùng xe. | Ford Ranger, Toyota Hilux, Mitsubishi Triton, Isuzu D-Max. |
-| **`Truck`** | Xe tải chở hàng hạng trung và nặng: thùng xe lớn, xe ben, xe bồn, xe đầu kéo container, xe tải chở vật liệu xây dựng. | Ôm toàn bộ đầu kéo và rơ-moóc/thùng hàng kèm theo. | Hyundai Porter, Isuzu Forward, Howo, xe container. |
-| **`Bus`** | Xe khách chở nhiều người (thường ≥ 16 chỗ), xe buýt công cộng, xe đưa đón học sinh/công nhân, xe khách liên tỉnh giường nằm. | Ôm toàn bộ thân xe buýt/xe khách, gương chiếu hậu lớn. | Xe buýt nội đô, Hyundai Universe, Ford Transit chở khách (≥ 16 chỗ). |
-| **`Motorcycle`** | Xe 2 bánh hoặc 3 bánh gắn động cơ **đang đỗ hoặc không có người ngồi trên xe điều khiển**. | Ôm trọn vẹn thân xe máy đỗ bên đường. | Xe máy dựng ở bãi đỗ, xe máy đỗ vỉa hè không người. |
+| **`Car`** | Xe con, xe du lịch chở người từ 4–9 chỗ, sedan, hatchback, SUV, crossover, xe taxi. | **Bắt buộc ôm cả xe gồm bánh xe và 2 gương chiếu hậu.** Không cắt cụt gương xe hay bánh xe. | Ô tô chạy trên đường, ô tô đỗ bên lề. |
+| **`Driver`** | Người đang **ngồi trên xe và trực tiếp điều khiển xe** (xe máy, xe mô tô, xe đạp). | **Bao gồm CẢ NGƯỜI LÁI XE VÀ XE** trong một bounding box duy nhất. | Người đi xe máy trong chùm xe đông đúc ở ngã tư. |
+| **`Pedestrian`** | Người đi bộ hoặc **bất kỳ ai KHÔNG ngồi trên xe**: đứng, đi, chạy, dắt xe máy, đẩy xe nôi. | Ôm khít cơ thể người (từ đầu đến chân, gồm ba lô/túi xách). | Người đi bộ cạnh hàng xe máy đỗ, người băng qua đường. |
+| **`Motorcycle`** | Xe 2 bánh hoặc 3 bánh gắn động cơ **đang đỗ hoặc không có người ngồi trên xe điều khiển**. | Ôm trọn vẹn thân xe máy đỗ bên đường / trong bãi đỗ. | Xe máy dựng thành hàng dọc trên vỉa hè (`images (1).jpg`). |
+| **`Bus`** | Xe khách chở nhiều người (thường ≥ 16 chỗ), xe buýt công cộng nội đô, xe khách liên tỉnh. | Ôm toàn bộ thân xe buýt, kính trước, gương chiếu hậu lớn. | Xe buýt đi giữa dòng xe máy đông đúc (`images.jpg`). |
+| **`Pickup`** | Xe bán tải: cabin kín phía trước và **thùng chở hàng hở (open cargo bed)** tách biệt phía sau. | Ôm toàn bộ xe gồm bánh xe, gương chiếu hậu và thùng xe. | Ford Ranger, Toyota Hilux, Mitsubishi Triton. |
+| **`Truck`** | Xe tải chở hàng hạng trung và nặng: thùng xe lớn, xe ben, xe bồn, xe đầu kéo container. | Ôm toàn bộ đầu kéo và rơ-moóc/thùng hàng kèm theo. | Xe tải chở hàng, xe bồn, container. |
 
 ### 4.2 Thuộc tính (Attributes)
 
 | Attribute | Kiểu | Giá trị | Tiêu chí đánh dấu (`true`) |
 |---|---|---|---|
-| **`occluded`** | Checkbox | `true` / `false` | Đánh dấu khi đối tượng bị **vật khác che khuất một phần** (bị xe khác che, bị cây xanh, cột đèn, biển báo hoặc người che mất > 10% diện tích). |
+| **`occluded`** | Checkbox | `true` / `false` | Đánh dấu khi đối tượng bị **vật khác che khuất một phần** (bị xe khác che, bị cây xanh, cột đèn, biển báo hoặc người che mất > 10% diện tích). Ví dụ: Xe buýt bị xe máy che cản trước; người lái xe máy đi sát sau xe khác bị che bánh trước. |
 | **`truncated`** | Checkbox | `true` / `false` | Đánh dấu khi đối tượng **chạm hoặc vượt ra ngoài mép ảnh** (bị cắt cụt đầu, đuôi, nóc hoặc bánh xe do góc nhìn camera). |
 
 ---
 
-## 5. Inclusion / Exclusion Details
+## 5. Inclusion / Exclusion Details & Edge Cases
 
-1. **Người điều khiển vs Người đi bộ:**
+1. **Người điều khiển vs Người đi bộ trong cảnh hỗn hợp (`images (1).jpg`):**
    - Đang ngồi trên yên xe và cầm lái -> **`Driver`** (box bao trùm cả người + xe).
    - Đang dắt bộ xe máy / xe đạp -> Người là **`Pedestrian`**, xe đang dắt là **`Motorcycle`** (tách riêng 2 box).
-   - Người đứng cạnh xe, đứng trên vỉa hè -> **`Pedestrian`**.
-2. **Xe con (`Car`):**
-   - Phải kiểm tra kỹ 2 bên sườn xe: gương chiếu hậu nhô ra ngoài phải nằm trọn trong box.
-   - Phải kéo đáy box xuống đúng điểm tiếp xúc giữa lốp xe và mặt đường (không cắt cụt bánh xe, không lấn vào bóng đen).
-3. **Xe cõng xe (xe cứu hộ chở ô tô):**
-   - Xe cứu hộ bên dưới: Label `Truck`.
-   - Ô tô được chở trên sàn xe cứu hộ: Vẫn label `Car` (thuộc tính `occluded: true` vì bánh bị che bởi sàn xe tải).
-4. **Vật thể cực nhỏ (< 15px):** Bỏ qua (Ignore) nếu không nhìn rõ kết cấu hoặc loại xe.
+   - Người đứng cạnh xe, đi bộ trên vỉa hè luồn lách qua hàng xe máy -> **`Pedestrian`** (nếu bị xe che chân, tích `occluded: true`).
+2. **Hàng xe máy đỗ (`Motorcycle` vs `Driver`):**
+   - Các xe máy dựng nối tiếp nhau trên vỉa hè hoặc lòng đường không có người ngồi trên -> Label từng chiếc là **`Motorcycle`**.
+3. **Chùm xe máy đông đúc ở ngã tư / đường phố (`images.jpg`, `img3.jpg`):**
+   - Dòng xe máy di chuyển sát nhau: vẽ box `Driver` riêng cho từng xe.
+   - Xe máy đi sau bị xe trước che khuất một phần bánh hoặc thân -> đánh dấu **`occluded: true`**.
+4. **Xe buýt to lớn giữa đám đông xe máy (`images.jpg`):**
+   - Label toàn bộ chiếc xe buýt là `Bus`.
+   - Phần cản trước hoặc gầm xe bị các xe máy phía trước che lấp -> đánh dấu xe buýt là **`occluded: true`**.
+5. **Vật thể nhỏ ở xa ngã tư (`img3.jpg`):**
+   - Kích thước nhỏ xuống tới khoảng **$8 - 12\text{px}$**: nếu vẫn phân biệt được đó là người lái xe máy (`Driver`) hay ô tô (`Car`) -> **BẮT BUỘC LABEL**.
+   - Chỉ bỏ qua nếu $< 8\text{px}$ và không thể nhận dạng hình thái.
+6. **Xe con (`Car`):**
+   - Bắt buộc kiểm tra và bao gồm đầy đủ **bánh xe tiếp đất** và **gương chiếu hậu 2 bên**.
 
 ---
 
@@ -87,7 +97,7 @@
 
 - **Che khuất 10% – 80%:** Label bình thường và tích chọn `occluded: true`.
 - **Che khuất > 80% (Heavy Occlusion):**
-  - Nếu vẫn nhận diện chắc chắn loại xe/người: Vẫn label box visible pixel và chọn `occluded: true`.
+  - Nếu vẫn nhận diện chắc chắn loại xe/người (ví dụ thấy mũ bảo hiểm + đầu xe máy quen thuộc, hoặc nóc xe ô tô): Vẫn label box visible pixel và chọn `occluded: true`.
   - Nếu chỉ thấy một đốm màu mơ hồ, không thể xác định loại đối tượng: **BỎ QUA (Ignore)**.
 - **Rìa ảnh (Truncation):** Mép box kéo sát tới pixel cuối cùng của khung ảnh (x=0, y=0 hoặc x=width, y=height), và tích chọn `truncated: true`.
 
@@ -95,13 +105,13 @@
 
 ## 7. Ambiguity & Escalation Path
 
-| Tình huống mập mờ | Quyết định chuẩn | Lý do |
+| Tình huống mập mờ trong Edge Cases | Quyết định chuẩn | Lý do |
 |---|---|---|
-| **Người lái xe máy chở thêm người phía sau** | Box **`Driver`** bao trùm người lái chính và chiếc xe. Người ngồi sau (pillion) có thể vẽ riêng box `Pedestrian` nếu lộ rõ thân người. | Người trực tiếp điều khiển xe gắn liền với xe thành một đơn vị di chuyển `Driver`. |
-| **Người vừa ngồi trên xe vừa chống chân dừng đèn đỏ** | **`Driver`** (box ôm cả người và xe) | Vẫn đang trong trạng thái vận hành, điều khiển phương tiện trên đường. |
-| **Người xuống xe đứng bên cạnh xe máy** | Người là **`Pedestrian`**, xe máy là **`Motorcycle`** | Người không còn ngồi trên xe điều khiển xe. |
-| **Gương chiếu hậu của Car quá mờ hoặc bị gập** | Ôm sát mép gương nhìn thấy được | Bắt buộc bao gồm cả gương chiếu hậu theo quy định xe `Car`. |
-| **Pickup có gắn nắp thùng cao ngang nóc xe** | **`Pickup`** | Vẫn giữ kết cấu gầm và rãnh phân cách giữa cabin và thùng chở hàng. |
+| **Nhiều xe máy chen chúc che khuất lẫn nhau** | Vẽ từng box **`Driver`** riêng, tích **`occluded: true`** cho xe bị che | Giữ tính toàn vẹn của từng thực thể tham gia giao thông. |
+| **Xe máy đỗ san sát nhau trên vỉa hè** | Vẽ từng box **`Motorcycle`** độc lập, tích **`occluded: true`** | Phân biệt rõ xe tĩnh không người với người lái xe di động. |
+| **Người lái xe máy chở người phía sau (chở 2, chở 3)** | Box **`Driver`** ôm người lái chính + xe. Người ngồi sau vẽ riêng **`Pedestrian`** nếu lộ rõ | Người cầm lái gắn liền với xe thành một đơn vị vận hành. |
+| **Xe buýt bị xe máy che mất nửa dưới đầu xe** | Vẽ box `Bus` trùm từ nóc xe xuống mép cản thấp nhất nhìn thấy, tích **`occluded: true`** | Xe buýt có diện tích lớn, phần che khuất < 30%. |
+| **Xe ở khoảng cách xa gần đường chân trời ($w \approx 10\text{px}$)** | Nếu nhận ra bóng dáng ô tô/người lái -> **Label**. Nếu chỉ là chấm sáng -> **Ignore** | Tối ưu hóa cho mô hình phát hiện vật thể tầm xa. |
 
 ---
 
@@ -111,15 +121,18 @@
 
 ---
 
-## 9. Examples & Reference Cases
+## 9. Examples & Reference Cases (Updated from Edge Cases)
 
-| Case | Loại tình huống | Expected Output | Ghi chú & Rule |
+| Case | Loại tình huống | Expected Output | Ghi chú & Rule thực tế |
 |---|---|---|---|
-| **Xe ô tô con chạy trên đường** | Normal | Label `Car`, `occluded: false`, `truncated: false` | **Box ôm toàn bộ xe, gồm cả bánh xe chạm đất và 2 gương chiếu hậu.** |
+| **Xe ô tô con chạy trên đường** | Normal | Label `Car`, `occluded: false`, `truncated: false` | **Box ôm toàn bộ xe, gồm bánh xe chạm đất và 2 gương chiếu hậu.** |
 | **Người lái xe máy trên đường** | Driver | Label `Driver`, `occluded: false`, `truncated: false` | **1 box duy nhất ôm trọn vẹn cả người lái xe và chiếc xe máy.** |
-| **Người dắt bộ xe máy qua đường** | Pedestrian + Motorcycle | 1 box `Pedestrian` (người) + 1 box `Motorcycle` (xe) | Không ngồi trên xe thì người là `Pedestrian`, xe tách riêng. |
-| **Xe bán tải bị xe khác che mất bánh** | Occlusion | Label `Pickup`, `occluded: true`, `truncated: false` | Nhận diện rõ thùng hàng hở phía sau; tích `occluded`. |
-| **Xe con bị cắt nửa thân ở rìa trái ảnh** | Truncation | Label `Car`, `occluded: false`, `truncated: true` | Mép trái box chạm x=0; gương hoặc bánh phía trong vẫn phải ôm khít; tích `truncated`. |
+| **Chùm xe máy chen chúc ở ngã tư (`images.jpg`)** | Edge (Density) | Mỗi xe 1 box `Driver`, tích `occluded: true` cho xe bị che | Các box overlap nhau bình thường. |
+| **Hàng xe máy đỗ trên vỉa hè (`images (1).jpg`)** | Edge (Parked) | Mỗi xe 1 box `Motorcycle`, `occluded: true` nếu bị xe bên cạnh che | Xe đỗ không người lái -> `Motorcycle`. |
+| **Người đi bộ cạnh hàng xe máy (`images (1).jpg`)** | Edge (Interaction) | Label `Pedestrian`, `occluded: true` nếu bị xe che chân | Không ngồi trên xe -> bắt buộc là `Pedestrian`. |
+| **Xe buýt đi giữa dòng xe máy (`images.jpg`)** | Edge (Occlusion) | Label `Bus`, `occluded: true`, `truncated: false` | Thân xe buýt lớn, xe máy che cản dưới. |
+| **Phương tiện nhỏ ở xa ngã tư (`img3.jpg`)** | Edge (Small/Far) | Label `Driver` hoặc `Car` với kích thước $w, h \approx 8-15\text{px}$ | Nhận diện được đặc trưng là bắt buộc gán nhãn. |
+| **Xe con bị cắt nửa thân ở rìa ảnh (`images (2).jpg`)** | Truncation | Label `Car`, `occluded: false`, `truncated: true` | Mép box chạm sát biên ảnh (x=0 hoặc y=0). |
 | **Bóng xe in trên mặt đường nhựa** | Negative | **Không vẽ box** | Bóng đổ không phải là bộ phận cơ học của xe. |
 
 ---
@@ -128,7 +141,7 @@
 
 Trước khi hoàn thành và xuất file (Save/Export), kiểm tra các lỗi thường gặp sau:
 1. ❌ **Cắt cụt gương chiếu hậu hoặc bánh xe của `Car`:** Vẽ box chỉ ôm khung vỏ mà bỏ quên gương 2 bên hoặc mép dưới lốp xe.
-2. ❌ **Vẽ tách rời xe máy và người lái:** Người đang điều khiển xe máy thì box `Driver` **phải bao gồm cả người lái xe và xe**.
-3. ❌ **Gán nhãn `Driver` cho người dắt xe hoặc người đi bộ:** Không ngồi trên xe điều khiển thì bắt buộc là **`Pedestrian`**.
-4. ❌ **Lỗi bóng đổ:** Kéo box lan ra vùng bóng đen dưới gầm xe trên mặt đường.
-5. ❌ **Quên tích `truncated`:** Bánh xe, gương hoặc đuôi xe chạm mép ảnh nhưng không tích `truncated: true`.
+2. ❌ **Bỏ quên người lái trong chùm xe máy:** Trong cảnh đông đúc, bỏ sót các xe máy nhỏ đi xen kẽ hoặc ở xa ngã tư.
+3. ❌ **Nhầm lẫn `Motorcycle` và `Driver`:** Nhầm xe máy có người lái thành `Motorcycle` (Đúng: có người ngồi điều khiển phải là `Driver` ôm cả người và xe).
+4. ❌ **Bỏ sót checkbox `occluded` trong đám đông:** Xe máy chen chúc nhau che khuất bánh trước nhưng quên không tích `occluded: true`.
+5. ❌ **Bỏ qua vật thể nhỏ ở ngã tư ($8-15\text{px}$):** Nhầm tưởng vật thể nhỏ là Ignore dù vẫn nhìn rõ hình bóng xe.

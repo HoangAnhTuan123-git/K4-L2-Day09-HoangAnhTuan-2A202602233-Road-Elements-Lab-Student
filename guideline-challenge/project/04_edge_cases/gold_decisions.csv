@@ -1,1 +1,12 @@
 sample_id,decision_id,expected,severity,rationale
+BDD17,d1,label=Car,major,Xe ô tô con đang chạy trên mặt đường ướt trời mưa
+BDD17,d2,geometry: box ôm khít bánh xe và gương không bao gồm bóng phản chiếu dưới nước,minor,Theo mục 3 guideline loại bỏ bóng đổ trên mặt đường
+BDD18,d1,label=Car,critical,Xe con trong bóng tối ban đêm có đèn pha rọi ngược
+BDD18,d2,geometry: box kéo chạm mặt đường lốp xe trong bóng tối,minor,Đảm bảo ôm trọn vẹn bánh xe dù bóng tối che mờ
+BDD22,d1,label=Car,minor,Xe chạy thẳng trên cao tốc lúc chạng vạng
+BDD22,d2,occluded=false,minor,Tầm nhìn cao tốc thoáng không bị che khuất
+BDD24,d1,label=Car,major,Xe con trên đường phố phủ tuyết trắng
+BDD24,d2,geometry: mép box ôm trọn thân xe và gương xe,minor,Theo quy chuẩn hình học xe con
+BDD26,d1,label=Driver,critical,Người điều khiển xe máy trong bóng tối ban đêm
+BDD26,d2,occluded=true,major,Xe máy bị che khuất một phần bởi phương tiện phía trước
+BDD26,d3,geometry: 1 box duy nhất trùm kín cả người lái và xe máy,major,Theo quy tắc Driver mục 2 guideline
