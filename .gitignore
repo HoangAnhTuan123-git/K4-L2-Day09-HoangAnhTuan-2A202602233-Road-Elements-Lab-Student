@@ -1,3 +1,7 @@
 __pycache__/
 *.pyc
 .DS_Store
+
+# Ignore everything in archive (1) except selected_10_images
+archive (1)/*
+!archive (1)/selected_10_images/
