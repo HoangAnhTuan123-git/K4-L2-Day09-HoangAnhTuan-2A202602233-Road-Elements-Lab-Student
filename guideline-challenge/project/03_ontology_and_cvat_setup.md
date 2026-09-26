@@ -12,7 +12,7 @@ Bảng ontology là **source of truth** cho schema CVAT: `03_cvat_labels.json` k
 | `Truck` | rectangle | class | — | — | false | Xe tải hạng trung/nặng, xe bồn, container |
 | `Bus` | rectangle | class | — | — | false | Xe khách, xe buýt công cộng $\ge 16$ chỗ |
 | `Pedestrian` | rectangle | class | — | — | false | Người đi bộ hoặc không ngồi trên xe điều khiển |
-| `Driver` | rectangle | class | — | — | false | Người ngồi trên xe điều khiển, ôm trọn cả người và xe |
+| `Driver` | rectangle | class | — | — | false | Người đang ngồi trên xe điều khiển xe máy hoặc xe đạp; chỉ đánh dấu người lái, không cần đánh dấu phương tiện |
 | `occluded` | — | attribute | true, false | false | false | Đánh dấu vật thể bị che khuất $> 10\%$ diện tích |
 | `truncated` | — | attribute | true, false | false | false | Đánh dấu vật thể bị cắt ở rìa/biên khung ảnh |
 
@@ -33,5 +33,5 @@ Bảng ontology là **source of truth** cho schema CVAT: `03_cvat_labels.json` k
 
 Thành viên Nguyễn Văn A (chưa tham gia viết code setup) mở task trên CVAT local:
 - Hiểu ngay công cụ cần dùng: **Draw new rectangle**.
-- Nắm rõ quy tắc quan trọng: `Driver` ôm cả người và xe máy; `Car` phải kéo khít cả bánh xe và gương chiếu hậu; xe chạm mép phải bật `truncated`.
+- Nắm rõ quy tắc quan trọng: `Driver` chỉ đánh dấu người lái xe máy hoặc xe đạp, không cần đánh dấu phương tiện; `Car` phải kéo khít cả bánh xe và gương chiếu hậu; xe chạm mép phải bật `truncated`.
 - Không gặp vướng mắc kỹ thuật, giao diện hiển thị đầy đủ 7 class và 2 checkbox attribute.

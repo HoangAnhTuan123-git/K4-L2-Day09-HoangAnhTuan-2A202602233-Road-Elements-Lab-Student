@@ -9,4 +9,4 @@ BDD24,d1,label=Car,major,Xe con trên đường phố phủ tuyết trắng
 BDD24,d2,geometry: mép box ôm trọn thân xe và gương xe,minor,Theo quy chuẩn hình học xe con
 BDD26,d1,label=Driver,critical,Người điều khiển xe máy trong bóng tối ban đêm
 BDD26,d2,occluded=true,major,Xe máy bị che khuất một phần bởi phương tiện phía trước
-BDD26,d3,geometry: 1 box duy nhất trùm kín cả người lái và xe máy,major,Theo quy tắc Driver mục 2 guideline
+BDD26,d3,geometry: box chỉ ôm khít người lái xe máy không bao gồm xe,major,Theo quy tắc Driver mục 2 guideline
