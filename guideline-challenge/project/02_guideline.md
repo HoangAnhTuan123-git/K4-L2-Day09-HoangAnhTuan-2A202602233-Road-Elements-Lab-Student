@@ -90,6 +90,11 @@
    - Chỉ bỏ qua nếu $< 8\text{px}$ và không thể nhận dạng hình thái.
 6. **Xe con (`Car`):**
    - Bắt buộc kiểm tra và bao gồm đầy đủ **bánh xe tiếp đất** và **gương chiếu hậu 2 bên**.
+7. **Hiện trường tai nạn / Xe máy ngã đổ trên mặt đường ướt (`image.png`):**
+   - **Xe máy ngã nằm ngang trên đường:** Gán nhãn là **`Motorcycle`**. Bounding box ôm khít toàn bộ chiếc xe máy nằm ngang (từ bánh trước, bánh sau, lốc máy và tay lái). Tích `occluded: true` nếu bị người hoặc xe khác che mất một phần. Bắt buộc **cắt bỏ vệt bóng phản chiếu đèn xe trên vũng nước mưa**.
+   - **Người ngồi bệt trên mặt đường cạnh xe:** Gán nhãn là **`Pedestrian`** (vì không ngồi trên xe điều khiển xe). Bounding box ôm trọn cơ thể người ngồi (gồm mũ bảo hiểm, áo khoác, ba lô).
+   - **Người đứng/khom lưng hỗ trợ nâng xe:** Gán nhãn là **`Pedestrian`** (tích `occluded: true` nếu bị xe che chân).
+   - **Người điều khiển xe máy khác đang lưu thông qua:** Gán nhãn là **`Driver`** (chỉ vẽ ôm người lái từ đầu tới chân theo quy tắc mới v2, không vẽ xe).
 
 ---
 
@@ -134,6 +139,11 @@
 | **Phương tiện nhỏ ở xa ngã tư (`img3.jpg`)** | Edge (Small/Far) | Label `Driver` hoặc `Car` với kích thước $w, h \approx 8-15\text{px}$ | Nhận diện được đặc trưng là bắt buộc gán nhãn. |
 | **Xe con bị cắt nửa thân ở rìa ảnh (`images (2).jpg`)** | Truncation | Label `Car`, `occluded: false`, `truncated: true` | Mép box chạm sát biên ảnh (x=0 hoặc y=0). |
 | **Bóng xe in trên mặt đường nhựa** | Negative | **Không vẽ box** | Bóng đổ không phải là bộ phận cơ học của xe. |
+| **Hiện trường xe máy ngã đổ & người ngồi bệt trên đường mưa (`image.png`)** | Edge (Accident / Wet Road) | Xe ngã = `Motorcycle` (ôm thân xe nằm ngang, bỏ bóng nước); Người ngồi bệt = `Pedestrian`; Người nâng xe = `Pedestrian`; Người đang chạy xe qua = `Driver` (chỉ ôm người). | Tách bạch rõ trạng thái xe tĩnh/ngã với người đi bộ và người lái xe di động. |
+
+### Minh họa Edge Case: Hiện trường xe máy ngã đổ & người ngồi bệt trên mặt đường ướt
+
+![Edge Case: Hiện trường xe máy ngã đổ và người ngồi bệt trên đường mưa](image.png)
 
 ---
 
